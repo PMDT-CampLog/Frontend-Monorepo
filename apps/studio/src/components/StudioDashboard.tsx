@@ -291,7 +291,7 @@ export default function StudioDashboard() {
                 borderRadius: '50%', background: '#ef4444', border: '2px solid var(--studio-chrome)'
               }} />
             </button>
-            <div className="studio-topbar__avatar" aria-label="Foto de perfil" role="img" />
+            <a href="/creator" className="studio-topbar__avatar" aria-label="Foto de perfil" title="Dashboard do Criador" style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }} />
           </div>
         </header>
 
