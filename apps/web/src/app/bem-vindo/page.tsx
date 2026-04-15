@@ -3,11 +3,10 @@ import React from 'react'
 import bg1 from '../../assets/bg-1.png'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
-import CadastroForm from './CadastroForm'
 
 function LogoIcon() {
   return (
-    <span className="auth-logo-icon" aria-hidden="true">
+    <span className="logo-icon" aria-hidden="true">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
         <path
           d="M 200 60 C 200 60 130 130 135 200 C 140 250 215 265 250 225 C 270 200 260 160 260 160 C 260 160 240 190 220 190 C 195 190 200 140 200 140 C 200 140 220 110 200 60 Z"
@@ -23,7 +22,14 @@ function LogoIcon() {
   )
 }
 
-export default function CadastroPage() {
+export default async function BemVindoPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ nome?: string }>
+}) {
+  const params = (await searchParams) ?? {}
+  const nome = (params.nome ?? 'nome do usuário').trim() || 'nome do usuário'
+
   const bg1Url = bg1.src
   const bg2Url = bg2.src
 
@@ -36,33 +42,28 @@ export default function CadastroPage() {
         style={{ backgroundImage: `url('${bg1Url}'), url('${bg2Url}')` }}
       />
 
-      <header>
-        <nav className="navbar" role="navigation" aria-label="Navegação principal">
+      <header aria-label="CampLog">
+        <nav className="navbar navbar-centered" role="navigation" aria-label="Navegação principal">
           <a href="/" className="logo" aria-label="CampLog — página inicial">
-            <span className="logo-icon" aria-hidden="true">
-              <LogoIcon />
-            </span>
+            <LogoIcon />
             CampLog
           </a>
-          <div className="nav-actions">
-            <a href="/login" className="btn btn-entrar">
-              Entrar
-            </a>
-          </div>
+          <div className="nav-actions" aria-hidden="true" />
         </nav>
       </header>
 
-      <main className="auth">
-        <section className="auth-card" aria-label="Cadastro">
-          <div className="auth-brand">
-            <div className="auth-brand-top">
-              <LogoIcon />
-              <span className="auth-brand-name">CampLog</span>
-            </div>
-            <span className="auth-brand-subtitle">Insira seus dados</span>
-          </div>
+      <main className="welcome">
+        <section className="welcome-content" aria-label="Bem-vindo">
+          <h1 className="welcome-title">Seja bem vindo, {nome}</h1>
 
-          <CadastroForm />
+          <div className="welcome-actions" role="group" aria-label="Escolha seu caminho">
+            <a className="welcome-btn" href="/criar-comunidade">
+              Quero Construir minha comunidade (Criador)
+            </a>
+            <a className="welcome-btn" href="/descobrir-projetos">
+              Quero descobrir e apoiar projetos (Apoiador)
+            </a>
+          </div>
         </section>
       </main>
 
