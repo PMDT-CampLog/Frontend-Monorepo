@@ -2,66 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tokens alinhados ao apps/web */
+/* ─── Tokens de cor — idênticos ao apps/web ──────────────────────────────── */
 :root {
   color-scheme: dark;
   --bg: #0d0a1e;
   --bg-nav: rgba(13, 10, 30, 0.75);
+
   --heading-sm: #624e73;
   --heading: #fff176;
+
   --body-text: rgba(255, 255, 255, 0.65);
   --footer-text: rgba(255, 255, 255, 0.4);
+  --footer-link: rgba(255, 255, 255, 0.75);
+
   --btn-entrar-bg: #2b0a4f;
+  --btn-entrar-border: #fff176;
+  --btn-entrar-text: #fff176;
+
   --surface-elevated: rgba(13, 10, 30, 0.55);
   --card-border: rgba(139, 92, 246, 0.28);
   --icon-accent: #a78bfa;
-  /* Roxo claro — logo na lateral e marca na topbar */
+
   --studio-logo-purple: #624e73;
-  /* Fundo mais escuro do app (lateral + topbar) */
   --studio-chrome: #0d0a1e;
+  --module-bg: rgba(98, 78, 115, 0.18);
+
+  --blob-purple: rgba(98, 78, 115, 0.5);
+  --blob-yellow: rgba(255, 241, 118, 0.4);
 }
 
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html,
 body {
   height: 100%;
-  margin: 0;
+  width: 100%;
+  background-color: var(--bg);
+  color: var(--body-text);
+  font-family: var(--font-lato), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-@layer base {
-  body {
-    @apply antialiased;
-    background-color: var(--bg);
-    color: var(--body-text);
-    font-family: var(--font-lato), sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-}
-
-/* Shell: [ sidebar | workspace (topbar + main) ] */
+/* ─── Shell: sidebar | workspace ─────────────────────────────────────────── */
 .studio-shell {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
   min-height: 100vh;
   min-height: 100dvh;
-  background-color: var(--bg);
+  background: var(--bg);
 }
 
-/* Barra lateral — só logo (roxo claro) + ícones; fundo roxo bem escuro */
+/* ─── Icon-only sidebar (narrow left rail) ───────────────────────────────── */
 .studio-sidebar {
   display: flex;
-  width: 3.75rem;
+  width: 3.5rem;
   flex-shrink: 0;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   padding: 0.75rem 0 1rem;
   background: var(--studio-chrome);
   border-right: 1px solid var(--card-border);
@@ -69,12 +74,11 @@ body {
 
 .studio-sidebar__logo {
   display: flex;
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   color: var(--studio-logo-purple);
 }
 
@@ -90,14 +94,13 @@ body {
   flex: 1;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .studio-sidebar__btn {
   display: flex;
-  height: 2.5rem;
-  width: 2.5rem;
-  flex-shrink: 0;
+  height: 2.25rem;
+  width: 2.25rem;
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
@@ -105,9 +108,7 @@ body {
   background: transparent;
   color: var(--studio-logo-purple);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .studio-sidebar__btn:hover {
@@ -120,35 +121,25 @@ body {
   color: var(--icon-accent);
 }
 
-/* Área à direita da lateral: topbar + conteúdo */
+/* ─── Workspace (topbar + main) ──────────────────────────────────────────── */
 .studio-workspace {
   display: flex;
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  background: var(--bg);
 }
 
-/* Topbar — só na área à direita da lateral; mesmo tom escuro */
+/* ─── Topbar ─────────────────────────────────────────────────────────────── */
 .studio-topbar {
   display: flex;
-  min-height: 3.5rem;
+  height: 3.25rem;
   flex-shrink: 0;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   border-bottom: 1px solid var(--card-border);
   background: var(--studio-chrome);
-  padding: 0.5rem 1rem;
-}
-
-@media (min-width: 640px) {
-  .studio-topbar {
-    flex-wrap: nowrap;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-  }
+  padding: 0 1.25rem;
 }
 
 .studio-topbar__brand {
@@ -160,7 +151,7 @@ body {
   color: var(--studio-logo-purple);
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1rem;
   letter-spacing: -0.02em;
 }
 
@@ -175,31 +166,46 @@ body {
   display: flex;
   min-width: 0;
   flex: 1;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
 }
 
 .studio-topbar__search {
+  position: relative;
   min-width: 8rem;
-  flex: 1 1 12rem;
-  max-width: 22rem;
+  flex: 0 1 16rem;
+}
+
+.studio-search-icon {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--heading-sm);
+  display: flex;
+  width: 16px;
+  height: 16px;
+}
+
+.studio-search-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .studio-search-input {
   width: 100%;
+  height: 2rem;
   border-radius: 9999px;
-  border: 2px solid var(--card-border);
+  border: 1px solid var(--card-border);
   background: rgba(8, 6, 18, 0.55);
-  padding: 0.45rem 1rem;
+  padding: 0 0.75rem 0 2rem;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.9);
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .studio-search-input::placeholder {
@@ -207,14 +213,14 @@ body {
 }
 
 .studio-search-input:focus {
-  border-color: rgba(255, 241, 118, 0.75);
-  box-shadow: 0 0 0 4px rgba(255, 241, 118, 0.12);
+  border-color: rgba(255, 241, 118, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 241, 118, 0.08);
 }
 
 .studio-topbar__icon-btn {
   display: flex;
-  height: 2.25rem;
-  width: 2.25rem;
+  height: 2rem;
+  width: 2rem;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -223,9 +229,7 @@ body {
   background: transparent;
   color: var(--studio-logo-purple);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .studio-topbar__icon-btn:hover {
@@ -234,54 +238,149 @@ body {
 }
 
 .studio-topbar__avatar {
-  height: 2.25rem;
-  width: 2.25rem;
+  height: 2rem;
+  width: 2rem;
   flex-shrink: 0;
   border-radius: 9999px;
   border: 2px solid var(--card-border);
-  background: rgba(98, 78, 115, 0.25);
+  background: var(--module-bg);
 }
 
+/* ─── Main content area ──────────────────────────────────────────────────── */
 .studio-main {
   flex: 1;
   min-height: 0;
-  min-width: 0;
   overflow-y: auto;
-  padding: 1rem 1rem 1.5rem;
+  padding: 1.25rem;
 }
 
-@media (min-width: 1024px) {
-  .studio-main {
-    padding: 1.5rem 1.5rem 2rem;
-  }
-}
-
-.studio-dashboard-grid {
+/* ─── 3-column dashboard grid ────────────────────────────────────────────── */
+.studio-grid {
   display: grid;
-  max-width: 1440px;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 1.25rem;
   grid-template-columns: 1fr;
   align-items: start;
-  gap: 1.5rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-@media (min-width: 1280px) {
-  .studio-dashboard-grid {
-    grid-template-columns: minmax(0, 1fr) 280px 300px;
+@media (min-width: 768px) {
+  .studio-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (min-width: 1536px) {
-  .studio-dashboard-grid {
-    grid-template-columns: minmax(0, 1fr) 300px 320px;
+@media (min-width: 1200px) {
+  .studio-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(200px, 280px) minmax(260px, 320px);
   }
 }
 
+/* ─── Card module ────────────────────────────────────────────────────────── */
 .studio-card {
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid var(--card-border);
   background: var(--surface-elevated);
   backdrop-filter: blur(14px);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Section titles ─────────────────────────────────────────────────────── */
+.studio-section-title {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--heading);
+}
+
+/* ─── Avatar placeholder ─────────────────────────────────────────────────── */
+.studio-avatar {
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--module-bg);
+  border: 2px solid var(--card-border);
+}
+
+.studio-avatar--sm {
+  width: 28px;
+  height: 28px;
+}
+
+.studio-avatar--md {
+  width: 36px;
+  height: 36px;
+}
+
+/* ─── Shortcut link items ────────────────────────────────────────────────── */
+.studio-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.studio-shortcut:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.studio-shortcut__icon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--module-bg);
+  flex-shrink: 0;
+  color: var(--icon-accent);
+}
+
+/* ─── Tag badges ─────────────────────────────────────────────────────────── */
+.studio-tag {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+/* ─── Post engagement bar ────────────────────────────────────────────────── */
+.studio-engage {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.studio-engage__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  color: var(--footer-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.studio-engage__btn:hover {
+  color: var(--icon-accent);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.studio-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--footer-text);
 }
