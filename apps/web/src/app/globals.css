@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Tokens de cor via CSS custom properties ─────────────────────────────── */
+:root {
+  /* Modo escuro (padrão do design) */
+  --bg:               #0d0a1e;
+  --bg-nav:           rgba(13, 10, 30, 0.75);
+  --heading-sm:       #7c5fa0;
+  --heading:          #eab308;
+  --body-text:        rgba(255, 255, 255, 0.65);
+  --footer-text:      rgba(255, 255, 255, 0.4);
+  --footer-link:      rgba(255, 255, 255, 0.75);
+
+  /* Botão Entrar */
+  --btn-entrar-bg:        transparent;
+  --btn-entrar-border:    #7c3aed;
+  --btn-entrar-text:      #ffffff;
+  --btn-entrar-hover-bg:  rgba(124, 58, 237, 0.15);
+
+  /* Botão Cadastre-se */
+  --btn-cadastre-bg:      #eab308;
+  --btn-cadastre-text:    #1a0533;
+  --btn-cadastre-border:  #eab308;
+  --btn-cadastre-hover-bg: #ca9e07;
+
+  /* Botão Faça Parte */
+  --btn-faca-bg:      #1a0533;
+  --btn-faca-border:  #7c3aed;
+  --btn-faca-text:    #ffffff;
+  --btn-faca-hover-bg: #2d0a52;
+
+  /* Blobs de bokeh */
+  --blob-purple:  rgba(88, 28, 200, 0.75);
+  --blob-yellow:  rgba(234, 179, 8, 0.55);
+  --blob-purple2: rgba(60, 10, 130, 0.5);
+}
+
+/* Modo claro — sobrescreve apenas o necessário */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:               #f4f0ff;
+    --bg-nav:           rgba(244, 240, 255, 0.8);
+    --heading-sm:       #7c5fa0;
+    --heading:          #4c1d95;
+    --body-text:        rgba(30, 10, 60, 0.65);
+    --footer-text:      rgba(30, 10, 60, 0.45);
+    --footer-link:      #4c1d95;
+
+    --btn-entrar-bg:        transparent;
+    --btn-entrar-border:    #7c3aed;
+    --btn-entrar-text:      #4c1d95;
+    --btn-entrar-hover-bg:  rgba(124, 58, 237, 0.08);
+
+    --btn-cadastre-bg:      #4c1d95;
+    --btn-cadastre-text:    #eab308;
+    --btn-cadastre-border:  #4c1d95;
+    --btn-cadastre-hover-bg: #3b1575;
+
+    --btn-faca-bg:      #4c1d95;
+    --btn-faca-border:  #4c1d95;
+    --btn-faca-text:    #ffffff;
+    --btn-faca-hover-bg: #3b1575;
+
+    --blob-purple:  rgba(139, 92, 246, 0.30);
+    --blob-yellow:  rgba(234, 179, 8, 0.35);
+    --blob-purple2: rgba(109, 40, 217, 0.18);
+  }
+}
+
+/* ─── Reset e base ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--body-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Blobs de bokeh animados ──────────────────────────────────────────────── */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float 10s ease-in-out infinite alternate;
+}
+
+.blob-purple {
+  width: 500px;
+  height: 500px;
+  background: var(--blob-purple);
+  right: 5%;
+  top: 15%;
+  animation-delay: 0s;
+}
+
+.blob-yellow {
+  width: 320px;
+  height: 320px;
+  background: var(--blob-yellow);
+  right: 20%;
+  top: 5%;
+  animation-delay: -3s;
+}
+
+.blob-purple2 {
+  width: 380px;
+  height: 380px;
+  background: var(--blob-purple2);
+  right: -2%;
+  top: 50%;
+  animation-delay: -6s;
+}
+
+@keyframes float {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-30px, 20px) scale(1.05); }
+  100% { transform: translate(15px, -25px) scale(0.97); }
+}
+
+/* ─── Navbar ────────────────────────────────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: var(--bg-nav);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--btn-entrar-text);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.logo-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.logo-flame {
+  font-size: 1rem;
+  color: #eab308;
+}
+
+.logo-code {
+  font-size: 0.6rem;
+  color: #eab308;
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ─── Botões ────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-entrar {
+  background: var(--btn-entrar-bg);
+  border-color: var(--btn-entrar-border);
+  color: var(--btn-entrar-text);
+}
+
+.btn-entrar:hover {
+  background: var(--btn-entrar-hover-bg);
+}
+
+.btn-cadastre {
+  background: var(--btn-cadastre-bg);
+  border-color: var(--btn-cadastre-border);
+  color: var(--btn-cadastre-text);
+}
+
+.btn-cadastre:hover {
+  background: var(--btn-cadastre-hover-bg);
+  box-shadow: 0 4px 20px rgba(234, 179, 8, 0.3);
+}
+
+.btn-faca-parte {
+  background: var(--btn-faca-bg);
+  border-color: var(--btn-faca-border);
+  color: var(--btn-faca-text);
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-faca-parte:hover {
+  background: var(--btn-faca-hover-bg);
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.35);
+}
+
+/* ─── Hero ──────────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  z-index: 10;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 2.5rem 4rem;
+  max-width: 560px;
+}
+
+.hero-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--heading-sm);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--heading);
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+.hero-description {
+  margin-top: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--body-text);
+  max-width: 430px;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────────── */
+.page-footer {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--footer-text);
+  z-index: 10;
+}
+
+.page-footer a {
+  color: var(--footer-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.page-footer a:hover {
+  opacity: 0.8;
+}

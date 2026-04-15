@@ -1,0 +1,22 @@
+{
+  "name": "@camplog/module-forum",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": {
+    "@camplog/api": "workspace:*",
+    "@camplog/types": "workspace:*",
+    "@camplog/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@camplog/config": "workspace:*",
+    "@types/react": "^18.3.18",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1 || ^19.0.0",
+    "react-dom": "^18.3.1 || ^19.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@camplog/config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./eslint/base":     "./eslint/base.js",
+    "./eslint/next":     "./eslint/next.js",
+    "./tailwind/base":   "./tailwind/base.js",
+    "./prettier":        "./prettier/index.json",
+    "./tsconfig/base":   "./tsconfig/base.json",
+    "./tsconfig/nextjs": "./tsconfig/nextjs.json",
+    "./tsconfig/react-lib": "./tsconfig/react-lib.json"
+  }
+}

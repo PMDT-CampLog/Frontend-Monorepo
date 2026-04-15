@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    // Compila cada pacote/app em ordem topológica
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+
+    // Servidor de desenvolvimento — roda todos em paralelo
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+
+    // Lint — independente entre pacotes
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+
+    // Verificação estática de tipos — dependente do build dos pacotes-base
+    "type-check": {
+      "dependsOn": ["^build"]
+    },
+
+    // Limpeza de artefatos gerados
+    "clean": {
+      "cache": false
+    }
+  }
+}
