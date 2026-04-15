@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { STUDIO_URL } from '../lib/studioUrl';
+
 export default function Navbar() {
     return (
         <nav className="navbar">
@@ -22,7 +24,7 @@ export default function Navbar() {
             </a>
 
             <div className="nav-actions">
-                <a href="/login" className="btn btn-entrar">Entrar</a>
+                <a href={STUDIO_URL} className="btn btn-entrar">Entrar</a>
             </div>
         </nav>
     );

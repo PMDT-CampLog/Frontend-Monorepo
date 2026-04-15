@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from '../components/Navbar'; // Ajuste o caminho se necessário
 
+import { STUDIO_URL } from '../lib/studioUrl';
 import bg1 from '../assets/bg-1.png';
 import bg2 from '../assets/bg-2.png';
 
@@ -45,7 +45,7 @@ export default function HomePage() {
           </a>
 
           <div className="nav-actions">
-            <a href="/login" className="btn btn-entrar">
+            <a href={STUDIO_URL} className="btn btn-entrar">
               Entrar
             </a>
             <a href="/cadastro" className="btn btn-cadastre">

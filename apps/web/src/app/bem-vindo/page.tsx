@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { STUDIO_URL } from '../../lib/studioUrl'
 import bg1 from '../../assets/bg-1.png'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
@@ -60,7 +61,7 @@ export default async function BemVindoPage({
             <a className="welcome-btn" href="/tipocriador">
               Quero Construir minha comunidade (Criador)
             </a>
-            <a className="welcome-btn" href="/descobrir-projetos">
+            <a className="welcome-btn" href={STUDIO_URL}>
               Quero descobrir e apoiar projetos (Apoiador)
             </a>
           </div>
