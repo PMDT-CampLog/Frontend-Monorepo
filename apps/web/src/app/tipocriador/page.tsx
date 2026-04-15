@@ -50,8 +50,8 @@ export default function TipoCriadorPage() {
           <h1 className="welcome-title">Que tipo de criador você é?</h1>
 
           <div className="welcome-actions" role="group" aria-label="Opções de criador">
-            <a className="welcome-btn" href="/criador/independente">
-              Criador/Time indepente
+            <a className="welcome-btn" href="/planosindie">
+              Criador/Time independente
             </a>
             <a className="welcome-btn" href="/criador/empresa">
               Empresa
