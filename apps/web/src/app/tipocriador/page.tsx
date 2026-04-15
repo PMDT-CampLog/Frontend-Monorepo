@@ -22,14 +22,7 @@ function LogoIcon() {
   )
 }
 
-export default async function BemVindoPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ nome?: string }>
-}) {
-  const params = (await searchParams) ?? {}
-  const nome = (params.nome ?? 'nome do usuário').trim() || 'nome do usuário'
-
+export default function TipoCriadorPage() {
   const bg1Url = bg1.src
   const bg2Url = bg2.src
 
@@ -53,15 +46,15 @@ export default async function BemVindoPage({
       </header>
 
       <main className="welcome">
-        <section className="welcome-content" aria-label="Bem-vindo">
-          <h1 className="welcome-title">Seja bem vindo, {nome}</h1>
+        <section className="welcome-content" aria-label="Tipo de criador">
+          <h1 className="welcome-title">Que tipo de criador você é?</h1>
 
-          <div className="welcome-actions" role="group" aria-label="Escolha seu caminho">
-            <a className="welcome-btn" href="/tipocriador">
-              Quero Construir minha comunidade (Criador)
+          <div className="welcome-actions" role="group" aria-label="Opções de criador">
+            <a className="welcome-btn" href="/criador/independente">
+              Criador/Time indepente
             </a>
-            <a className="welcome-btn" href="/descobrir-projetos">
-              Quero descobrir e apoiar projetos (Apoiador)
+            <a className="welcome-btn" href="/criador/empresa">
+              Empresa
             </a>
           </div>
         </section>

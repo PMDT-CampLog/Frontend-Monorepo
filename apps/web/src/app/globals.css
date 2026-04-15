@@ -523,13 +523,22 @@ body {
   color: var(--heading);
   background: rgba(43, 10, 79, 0.55);
   border: 2px solid rgba(255, 241, 118, 0.9);
-  box-shadow: 0 0 0 4px rgba(255, 241, 118, 0.08), 0 22px 60px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 0 0 4px rgba(255, 241, 118, 0.08),
+    0 0 22px rgba(255, 241, 118, 0.18),
+    0 0 46px rgba(168, 85, 247, 0.12),
+    0 22px 60px rgba(0, 0, 0, 0.35);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .welcome-btn:hover {
   transform: translateY(-1px);
   background: rgba(71, 22, 128, 0.62);
+  box-shadow:
+    0 0 0 4px rgba(255, 241, 118, 0.12),
+    0 0 26px rgba(255, 241, 118, 0.28),
+    0 0 62px rgba(168, 85, 247, 0.18),
+    0 28px 72px rgba(0, 0, 0, 0.4);
 }
 
 .welcome-btn:active {
