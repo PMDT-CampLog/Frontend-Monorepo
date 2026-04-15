@@ -53,7 +53,7 @@ export default function TipoCriadorPage() {
             <a className="welcome-btn" href="/planosindie">
               Criador/Time independente
             </a>
-            <a className="welcome-btn" href="/criador/empresa">
+            <a className="welcome-btn" href="/planosempresa">
               Empresa
             </a>
           </div>
