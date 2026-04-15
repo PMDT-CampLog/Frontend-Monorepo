@@ -429,7 +429,7 @@ export default function StudioDashboard() {
               {/* — Latest Wiki Pages — */}
               <div className="studio-card" style={{ padding: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                  <h3 className="studio-section-title">Litest Wiki Pages</h3>
+                  <h3 className="studio-section-title">Ultimas Wiki's vistas</h3>
                   <button type="button" style={{ background: 'none', border: 'none', color: 'var(--heading)', opacity: 0.6, cursor: 'pointer' }}>
                     <IconDots />
                   </button>
