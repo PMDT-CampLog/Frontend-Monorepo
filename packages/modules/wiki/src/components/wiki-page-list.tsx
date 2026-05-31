@@ -12,20 +12,23 @@ export function WikiPageList({ projectSlug }: WikiPageListProps) {
   const { data, isLoading, isError } = useWikiPages(projectSlug)
 
   if (isLoading) {
-    return <p className="text-white/60 animate-pulse">Carregando páginas...</p>
+    return <p className="text-slate-500 dark:text-white/60 animate-pulse">Carregando páginas...</p>
   }
 
   if (isError || !data) {
-    return <p className="text-red-400">Erro ao carregar páginas da wiki.</p>
+    return <p className="text-red-500 dark:text-red-400">Erro ao carregar páginas da wiki.</p>
   }
 
   return (
     <section>
       <ul className="flex flex-col gap-2">
         {data.data.map((page) => (
-          <li key={page.id} className="rounded-lg border border-surface-overlay bg-surface-raised p-4">
-            <h3 className="font-medium text-white">{page.title}</h3>
-            <p className="mt-1 text-sm text-white/60">/{page.slug}</p>
+          <li
+            key={page.id}
+            className="rounded-lg border border-surface-overlay bg-surface-raised p-4"
+          >
+            <h3 className="font-medium text-slate-900 dark:text-white">{page.title}</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-white/60">/{page.slug}</p>
           </li>
         ))}
       </ul>

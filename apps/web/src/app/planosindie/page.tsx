@@ -46,7 +46,8 @@ const plans: Plan[] = [
   },
   {
     title: 'Studio',
-    description: 'Um time pequeno de criadores precisando de organização interna e contato com a comunidade',
+    description:
+      'Um time pequeno de criadores precisando de organização interna e contato com a comunidade',
     cta: 'R$ 14,90 por mês',
     featured: true,
     includes: [
@@ -150,4 +151,3 @@ export default function PlanosIndiePage() {
     </>
   )
 }
-

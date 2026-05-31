@@ -19,9 +19,7 @@ export function useWikiPage(projectSlug: string, pageSlug: string) {
   return useQuery<WikiPage>({
     queryKey: ['wiki', 'page', projectSlug, pageSlug],
     queryFn: async () => {
-      const { data } = await httpClient.get(
-        `/projects/${projectSlug}/wiki/${pageSlug}`,
-      )
+      const { data } = await httpClient.get(`/projects/${projectSlug}/wiki/${pageSlug}`)
       return data
     },
     enabled: Boolean(projectSlug && pageSlug),

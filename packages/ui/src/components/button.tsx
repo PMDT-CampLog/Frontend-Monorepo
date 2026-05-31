@@ -7,16 +7,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-brand-500 text-white shadow-sm hover:bg-brand-600 active:bg-brand-700',
+        primary: 'bg-brand-500 text-white shadow-sm hover:bg-brand-600 active:bg-brand-700',
         secondary:
-          'bg-surface-raised text-white border border-surface-overlay hover:bg-surface-overlay',
-        ghost:
-          'text-white hover:bg-surface-raised',
-        destructive:
-          'bg-red-600 text-white hover:bg-red-700',
-        outline:
-          'border border-brand-500 text-brand-400 hover:bg-brand-500/10',
+          'bg-surface-raised text-slate-900 dark:text-white border border-surface-overlay hover:bg-surface-overlay',
+        ghost: 'text-slate-900 dark:text-white hover:bg-surface-raised',
+        destructive: 'bg-red-600 text-white hover:bg-red-700',
+        outline: 'border border-brand-500 text-brand-600 dark:text-brand-400 hover:bg-brand-500/10',
       },
       size: {
         sm: 'h-8 px-3 text-sm',
@@ -33,13 +29,10 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
 export function Button({ className, variant, size, ...props }: ButtonProps) {
-  return (
-    <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
-  )
+  return <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
 }

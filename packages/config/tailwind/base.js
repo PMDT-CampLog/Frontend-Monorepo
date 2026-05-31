@@ -20,9 +20,9 @@ const config = {
           900: "hsl(245, 90%, 14%)",
         },
         surface: {
-          DEFAULT: "hsl(220, 15%, 10%)",
-          raised: "hsl(220, 15%, 14%)",
-          overlay: "hsl(220, 15%, 18%)",
+          DEFAULT: "var(--surface-default)",
+          raised: "var(--surface-raised)",
+          overlay: "var(--surface-overlay)",
         },
       },
       fontFamily: {

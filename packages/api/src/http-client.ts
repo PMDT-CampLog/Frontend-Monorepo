@@ -9,8 +9,7 @@ export const httpClient = axios.create({
 
 // Interceptor de request: injeta o token de autenticação quando disponível
 httpClient.interceptors.request.use((config) => {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('camplog:token') : null
+  const token = typeof window !== 'undefined' ? localStorage.getItem('camplog:token') : null
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`

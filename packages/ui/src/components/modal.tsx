@@ -26,11 +26,11 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <h2 className="mb-4 text-lg font-semibold text-white">{title}</h2>
+          <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
         )}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-white/40 transition-colors hover:text-white"
+          className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:text-white/40 dark:hover:text-white transition-colors"
           aria-label="Fechar modal"
         >
           ✕

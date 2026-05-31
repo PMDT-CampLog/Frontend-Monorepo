@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import { STUDIO_URL } from '../lib/studioUrl';
-import bg1 from '../assets/bg-1.png';
-import bg2 from '../assets/bg-2.png';
+import { STUDIO_URL } from '../lib/studioUrl'
+import bg1 from '../assets/bg-1.png'
+import bg2 from '../assets/bg-2.png'
 
 function LogoIcon() {
   return (
@@ -23,8 +23,8 @@ function LogoIcon() {
 }
 
 export default function HomePage() {
-  const bg1Url = bg1.src;
-  const bg2Url = bg2.src;
+  const bg1Url = bg1.src
+  const bg2Url = bg2.src
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function HomePage() {
         className="custom-bg"
         aria-hidden="true"
         style={{
-          backgroundImage: `url('${bg1Url}'), url('${bg2Url}')`
+          backgroundImage: `url('${bg1Url}'), url('${bg2Url}')`,
         }}
       />
 
@@ -66,8 +66,8 @@ export default function HomePage() {
           </h1>
 
           <p className="hero-description">
-            Crie sua comunidade, se junte a uma, mantenha ou consulte uma wiki,
-            controle e reporte bugs, tudo em um só lugar para você.
+            Crie sua comunidade, se junte a uma, mantenha ou consulte uma wiki, controle e reporte
+            bugs, tudo em um só lugar para você.
           </p>
 
           <div>
@@ -80,8 +80,7 @@ export default function HomePage() {
 
       <footer className="page-footer">
         <p>
-          Precisa de Ajuda?{' '}
-          <a href="/contato">Contacte-nos</a>
+          Precisa de Ajuda? <a href="/contato">Contacte-nos</a>
         </p>
       </footer>
     </>
