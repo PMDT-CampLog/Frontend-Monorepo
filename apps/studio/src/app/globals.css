@@ -8,7 +8,7 @@
   --bg: #0d0a1e;
   --bg-nav: rgba(13, 10, 30, 0.75);
 
-  --heading-sm: #624e73;
+  --heading-sm: #b0a2c7; /* Roxo pastel claro - Legibilidade WCAG AAA */
   --heading: #fff176;
 
   --body-text: rgba(255, 255, 255, 0.65);
@@ -23,12 +23,66 @@
   --card-border: rgba(139, 92, 246, 0.28);
   --icon-accent: #a78bfa;
 
-  --studio-logo-purple: #624e73;
+  --studio-logo-purple: #b0a2c7;
   --studio-chrome: #0d0a1e;
   --module-bg: rgba(98, 78, 115, 0.18);
 
   --blob-purple: rgba(98, 78, 115, 0.5);
   --blob-yellow: rgba(255, 241, 118, 0.4);
+
+  /* Variáveis Adicionais Dinâmicas */
+  --studio-text-primary: #ffffff;
+  --studio-hover-bg: rgba(255, 255, 255, 0.04);
+  --welcome-btn-bg: rgba(43, 10, 79, 0.55);
+
+  /* Tags */
+  --tag-in-progress-border: rgba(255, 241, 118, 0.4);
+  --tag-in-progress-bg: rgba(255, 241, 118, 0.12);
+  --tag-in-progress-color: #fff176;
+  --tag-done-border: rgba(239, 68, 68, 0.4);
+  --tag-done-bg: rgba(239, 68, 68, 0.12);
+  --tag-done-color: rgb(252, 165, 165);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f4f0ff;
+    --bg-nav: rgba(244, 240, 255, 0.8);
+    --heading-sm: #523f61; /* Roxo escuro suave - Legibilidade WCAG AAA */
+    --heading: #2b0a4f;
+    --body-text: rgba(30, 10, 60, 0.65);
+    --footer-text: rgba(30, 10, 60, 0.45);
+    --footer-link: #2b0a4f;
+
+    --btn-entrar-bg: transparent;
+    --btn-entrar-border: #2b0a4f;
+    --btn-entrar-text: #2b0a4f;
+
+    --surface-elevated: rgba(255, 255, 255, 0.75);
+    --card-border: rgba(43, 10, 79, 0.15);
+    --icon-accent: #674cf0;
+
+    --studio-logo-purple: #523f61;
+    --studio-chrome: #ffffff;
+    --module-bg: rgba(43, 10, 79, 0.08);
+
+    --blob-purple: rgba(98, 78, 115, 0.15);
+    --blob-yellow: rgba(255, 241, 118, 0.1);
+
+    /* Variáveis Adicionais Dinâmicas em Modo Claro */
+    --studio-text-primary: #2b0a4f;
+    --studio-hover-bg: rgba(43, 10, 79, 0.04);
+    --welcome-btn-bg: #2b0a4f;
+
+    /* Tags em Modo Claro com excelente contraste */
+    --tag-in-progress-border: rgba(217, 119, 6, 0.4);
+    --tag-in-progress-bg: rgba(217, 119, 6, 0.08);
+    --tag-in-progress-color: #b45309;
+    --tag-done-border: rgba(220, 38, 38, 0.4);
+    --tag-done-bg: rgba(220, 38, 38, 0.08);
+    --tag-done-color: #b91c1c;
+  }
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────────────── */

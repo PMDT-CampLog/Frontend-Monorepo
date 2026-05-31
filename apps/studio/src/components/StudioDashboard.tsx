@@ -412,9 +412,9 @@ const bugItems = [
     desc: 'Ultimo commit feito há 13 minutos atrás',
     tag: 'Em progresso',
     tagColor: {
-      borderColor: 'rgba(255, 241, 118, 0.4)',
-      backgroundColor: 'rgba(255, 241, 118, 0.12)',
-      color: '#fff176',
+      borderColor: 'var(--tag-in-progress-border)',
+      backgroundColor: 'var(--tag-in-progress-bg)',
+      color: 'var(--tag-in-progress-color)',
     } as React.CSSProperties,
   },
   {
@@ -422,9 +422,9 @@ const bugItems = [
     desc: 'Resumo rápido do que será consertado no próximo patch',
     tag: 'Feito',
     tagColor: {
-      borderColor: 'rgba(239, 68, 68, 0.4)',
-      backgroundColor: 'rgba(239, 68, 68, 0.12)',
-      color: 'rgb(252, 165, 165)',
+      borderColor: 'var(--tag-done-border)',
+      backgroundColor: 'var(--tag-done-bg)',
+      color: 'var(--tag-done-color)',
     } as React.CSSProperties,
   },
 ]
@@ -566,7 +566,13 @@ export default function StudioDashboard() {
                   >
                     <div className="studio-avatar studio-avatar--md" />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ color: 'white', fontWeight: 600, fontSize: '0.875rem' }}>
+                      <p
+                        style={{
+                          color: 'var(--studio-text-primary)',
+                          fontWeight: 600,
+                          fontSize: '0.875rem',
+                        }}
+                      >
                         CampLog
                         <span
                           style={{
@@ -710,7 +716,13 @@ export default function StudioDashboard() {
                   <a href="#" key={item.title} className="studio-shortcut">
                     <span className="studio-shortcut__icon">{item.icon}</span>
                     <div style={{ minWidth: 0, flex: 1 }}>
-                      <p style={{ color: 'white', fontWeight: 600, fontSize: '0.85rem' }}>
+                      <p
+                        style={{
+                          color: 'var(--studio-text-primary)',
+                          fontWeight: 600,
+                          fontSize: '0.85rem',
+                        }}
+                      >
                         {item.title}
                       </p>
                       <p style={{ color: 'var(--heading-sm)', fontSize: '0.72rem', marginTop: 2 }}>
@@ -776,7 +788,7 @@ export default function StudioDashboard() {
                           transition: 'background 0.15s ease',
                         }}
                         onMouseEnter={(e) =>
-                          (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')
+                          (e.currentTarget.style.background = 'var(--studio-hover-bg)')
                         }
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
@@ -784,7 +796,13 @@ export default function StudioDashboard() {
                           <IconDoc />
                         </span>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ color: 'white', fontWeight: 600, fontSize: '0.8rem' }}>
+                          <p
+                            style={{
+                              color: 'var(--studio-text-primary)',
+                              fontWeight: 600,
+                              fontSize: '0.8rem',
+                            }}
+                          >
                             {w.title}
                           </p>
                           <p
@@ -876,7 +894,7 @@ export default function StudioDashboard() {
                           transition: 'background 0.15s ease',
                         }}
                         onMouseEnter={(e) =>
-                          (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')
+                          (e.currentTarget.style.background = 'var(--studio-hover-bg)')
                         }
                         onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                       >
@@ -889,14 +907,20 @@ export default function StudioDashboard() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             borderRadius: 6,
-                            background: 'rgba(43, 10, 79, 0.5)',
+                            background: 'var(--module-bg)',
                             marginTop: 2,
                           }}
                         >
                           <IconCalendar />
                         </span>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ color: 'white', fontWeight: 600, fontSize: '0.8rem' }}>
+                          <p
+                            style={{
+                              color: 'var(--studio-text-primary)',
+                              fontWeight: 600,
+                              fontSize: '0.8rem',
+                            }}
+                          >
                             🐛 {b.title}
                           </p>
                           <p

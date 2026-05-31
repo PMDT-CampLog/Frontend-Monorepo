@@ -2,11 +2,7 @@ import { Button } from '@camplog/ui'
 import { WikiPageList } from '@camplog/module-wiki'
 
 // Página pública de demonstração de uma wiki de projeto
-export default async function ProjectWikiPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function ProjectWikiPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
   return (

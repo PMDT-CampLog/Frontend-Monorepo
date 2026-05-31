@@ -305,7 +305,7 @@ export default function CreatorDashboard() {
                   background: isActive
                     ? 'linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))'
                     : 'transparent',
-                  color: isActive ? '#fff' : 'var(--body-text)',
+                  color: isActive ? 'var(--studio-text-primary)' : 'var(--body-text)',
                   fontWeight: isActive ? 700 : 500,
                   transition: 'all 0.2s ease',
                   borderLeft: isActive ? '3px solid var(--icon-accent)' : '3px solid transparent',
@@ -313,7 +313,7 @@ export default function CreatorDashboard() {
                   fontSize: '0.85rem',
                 }}
                 onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                  if (!isActive) e.currentTarget.style.background = 'var(--studio-hover-bg)'
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) e.currentTarget.style.background = 'transparent'
@@ -341,7 +341,7 @@ export default function CreatorDashboard() {
         <header className="studio-topbar" style={{ padding: '0 2rem' }}>
           <h1
             style={{
-              color: '#fff',
+              color: 'var(--studio-text-primary)',
               fontSize: '1.25rem',
               fontWeight: 700,
               fontFamily: 'var(--font-dm-sans), sans-serif',
@@ -415,7 +415,12 @@ export default function CreatorDashboard() {
                   }}
                 >
                   <span
-                    style={{ fontSize: '2.5rem', fontWeight: 800, color: '#fff', lineHeight: 1 }}
+                    style={{
+                      fontSize: '2.5rem',
+                      fontWeight: 800,
+                      color: 'var(--studio-text-primary)',
+                      lineHeight: 1,
+                    }}
                   >
                     1,204
                   </span>
@@ -468,7 +473,12 @@ export default function CreatorDashboard() {
                   }}
                 >
                   <span
-                    style={{ fontSize: '2.5rem', fontWeight: 800, color: '#fff', lineHeight: 1 }}
+                    style={{
+                      fontSize: '2.5rem',
+                      fontWeight: 800,
+                      color: 'var(--studio-text-primary)',
+                      lineHeight: 1,
+                    }}
                   >
                     8
                   </span>
@@ -513,7 +523,7 @@ export default function CreatorDashboard() {
                       borderRadius: '8px',
                       border: '1px solid var(--card-border)',
                       background: 'transparent',
-                      color: '#fff',
+                      color: 'var(--studio-text-primary)',
                       fontWeight: 600,
                       cursor: 'pointer',
                       transition: 'all 0.2s',
@@ -521,7 +531,7 @@ export default function CreatorDashboard() {
                       fontSize: '0.85rem',
                     }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')
+                      (e.currentTarget.style.background = 'var(--studio-hover-bg)')
                     }
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
@@ -533,7 +543,7 @@ export default function CreatorDashboard() {
                       borderRadius: '8px',
                       border: 'none',
                       background: 'var(--icon-accent)',
-                      color: '#000',
+                      color: 'var(--bg)',
                       fontWeight: 800,
                       cursor: 'pointer',
                       boxShadow: '0 4px 14px rgba(167, 139, 250, 0.4)',
@@ -560,7 +570,7 @@ export default function CreatorDashboard() {
                     border: '1px solid var(--card-border)',
                     padding: '1rem',
                     borderRadius: '12px',
-                    color: '#fff',
+                    color: 'var(--studio-text-primary)',
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     outline: 'none',
@@ -607,8 +617,8 @@ export default function CreatorDashboard() {
                         cursor: 'pointer',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
-                        e.currentTarget.style.color = '#fff'
+                        e.currentTarget.style.background = 'var(--studio-hover-bg)'
+                        e.currentTarget.style.color = 'var(--studio-text-primary)'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
@@ -646,7 +656,7 @@ export default function CreatorDashboard() {
                     background: 'transparent',
                     border: 'none',
                     padding: '1.25rem',
-                    color: 'rgba(255, 255, 255, 0.9)',
+                    color: 'var(--studio-text-primary)',
                     fontSize: '0.95rem',
                     lineHeight: 1.6,
                     outline: 'none',
@@ -672,7 +682,7 @@ export default function CreatorDashboard() {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  background: dragActive ? 'rgba(167, 139, 250, 0.05)' : 'rgba(8, 6, 18, 0.3)',
+                  background: dragActive ? 'rgba(167, 139, 250, 0.05)' : 'var(--module-bg)',
                   transition: 'all 0.2s',
                   cursor: 'pointer',
                 }}
@@ -680,7 +690,7 @@ export default function CreatorDashboard() {
                 <IconUpload />
                 <p
                   style={{
-                    color: '#fff',
+                    color: 'var(--studio-text-primary)',
                     fontWeight: 600,
                     fontSize: '0.95rem',
                     marginTop: '0.5rem',
