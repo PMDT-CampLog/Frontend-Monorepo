@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react'
-import { STUDIO_URL } from '../../lib/studioUrl'
 import bg1 from '../../assets/bg-1.png'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
-import CadastroForm from './CadastroForm'
+import LoginForm from './LoginForm'
 
 function LogoIcon() {
   return (
@@ -23,7 +22,7 @@ function LogoIcon() {
   )
 }
 
-export default function CadastroPage() {
+export default function LoginPage() {
   const bg1Url = bg1.src
   const bg2Url = bg2.src
 
@@ -45,21 +44,21 @@ export default function CadastroPage() {
             CampLog
           </a>
           <div className="nav-actions">
-            <a href="/login" className="btn btn-entrar">
-              Entrar
+            <a href="/cadastro" className="btn btn-cadastre">
+              Cadastre-se
             </a>
           </div>
         </nav>
       </header>
 
       <main className="auth">
-        <section className="auth-card" aria-label="Cadastro">
+        <section className="auth-card" aria-label="Login">
           <div className="auth-brand">
             <div className="auth-brand-top">
               <LogoIcon />
               <span className="auth-brand-name">CampLog</span>
             </div>
-            <span className="auth-brand-subtitle">Insira seus dados</span>
+            <span className="auth-brand-subtitle">Insira suas credenciais</span>
           </div>
 
           <Suspense fallback={
@@ -69,7 +68,7 @@ export default function CadastroPage() {
               </svg>
             </div>
           }>
-            <CadastroForm />
+            <LoginForm />
           </Suspense>
         </section>
       </main>

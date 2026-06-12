@@ -45,7 +45,7 @@ export default function HomePage() {
           </a>
 
           <div className="nav-actions">
-            <a href={STUDIO_URL} className="btn btn-entrar">
+            <a href="/login" className="btn btn-entrar">
               Entrar
             </a>
             <a href="/cadastro" className="btn btn-cadastre">

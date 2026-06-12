@@ -3,3 +3,4 @@
 export type { User, UserRole } from './user'
 export type { Project, ProjectStatus } from './project'
 export type { PaginatedResponse, ApiError } from './api'
+export type { RegisterRequest, LoginRequest, AuthResponse, OAuth2CallbackRequest } from './auth'

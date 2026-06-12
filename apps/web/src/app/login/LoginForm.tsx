@@ -1,24 +1,23 @@
 'use client'
 
 import React from 'react'
-import { useAuth } from './useAuth'
+import { useLogin } from './useLogin'
 
-export default function CadastroForm() {
+export default function LoginForm() {
   const {
     form,
     touched,
     errors,
-    isValid,
     isLoading,
     submitError,
     updateField,
     handleBlur,
-    handleRegister,
+    handleLogin,
     handleOAuthRedirect,
-  } = useAuth()
+  } = useLogin()
 
   return (
-    <form className="auth-form" onSubmit={handleRegister} noValidate>
+    <form className="auth-form" onSubmit={handleLogin} noValidate>
       {submitError && (
         <div className="auth-error-banner" role="alert">
           <svg className="auth-error-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -29,22 +28,6 @@ export default function CadastroForm() {
           <span>{submitError}</span>
         </div>
       )}
-
-      <label className="auth-field">
-        <span className="auth-label">Nome completo</span>
-        <input
-          className={`auth-input ${touched.name && errors.name ? 'auth-input-invalid' : ''}`}
-          name="name"
-          autoComplete="name"
-          placeholder="Nome e sobrenome"
-          value={form.name}
-          onChange={(e) => updateField('name', e.target.value)}
-          onBlur={() => handleBlur('name')}
-        />
-        {touched.name && errors.name && (
-          <span className="auth-field-error">{errors.name}</span>
-        )}
-      </label>
 
       <label className="auth-field">
         <span className="auth-label">E-mail</span>
@@ -64,13 +47,13 @@ export default function CadastroForm() {
       </label>
 
       <label className="auth-field">
-        <span className="auth-label">Crie sua Senha</span>
+        <span className="auth-label">Senha</span>
         <input
           className={`auth-input ${touched.password && errors.password ? 'auth-input-invalid' : ''}`}
           type="password"
           name="password"
-          autoComplete="new-password"
-          placeholder="Mínimo de 8 caracteres"
+          autoComplete="current-password"
+          placeholder="Sua senha"
           value={form.password}
           onChange={(e) => updateField('password', e.target.value)}
           onBlur={() => handleBlur('password')}
@@ -80,38 +63,21 @@ export default function CadastroForm() {
         )}
       </label>
 
-      <label className="auth-field">
-        <span className="auth-label">Confirme sua Senha</span>
-        <input
-          className={`auth-input ${touched.confirmPassword && errors.confirmPassword ? 'auth-input-invalid' : ''}`}
-          type="password"
-          name="confirmPassword"
-          autoComplete="new-password"
-          placeholder="Confirme sua senha"
-          value={form.confirmPassword}
-          onChange={(e) => updateField('confirmPassword', e.target.value)}
-          onBlur={() => handleBlur('confirmPassword')}
-        />
-        {touched.confirmPassword && errors.confirmPassword && (
-          <span className="auth-field-error">{errors.confirmPassword}</span>
-        )}
-      </label>
-
       <button type="submit" className="auth-primary" disabled={isLoading}>
         {isLoading ? (
           <span className="auth-spinner-container">
             <svg className="auth-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
               <circle cx="12" cy="12" r="10" strokeDasharray="42" strokeDashoffset="14" />
             </svg>
-            Cadastrando...
+            Entrando...
           </span>
         ) : (
-          'Continuar para cadastrar'
+          'Entrar'
         )}
       </button>
 
       <div className="auth-divider" aria-hidden="true">
-        <span>ou cadastre-se com</span>
+        <span>ou entrar com</span>
       </div>
 
       <div className="auth-social">
@@ -155,6 +121,11 @@ export default function CadastroForm() {
           </svg>
           GitHub
         </button>
+      </div>
+
+      <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.85rem' }}>
+        <span style={{ color: 'var(--heading-sm)' }}>Novo por aqui? </span>
+        <a href="/cadastro" style={{ color: 'var(--heading)', fontWeight: 800, textDecoration: 'underline' }}>Cadastre-se</a>
       </div>
     </form>
   )

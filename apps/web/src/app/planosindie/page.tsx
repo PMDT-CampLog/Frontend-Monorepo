@@ -1,9 +1,8 @@
 import React from 'react'
-
-import { STUDIO_URL } from '../../lib/studioUrl'
 import bg1 from '../../assets/bg-1.png'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
+import PlanCta from './PlanCta'
 
 function LogoIcon() {
   return (
@@ -131,9 +130,7 @@ export default function PlanosIndiePage() {
                 </div>
 
                 <footer className="plan-foot">
-                  <a className="plan-cta" href={STUDIO_URL}>
-                    {plan.cta}
-                  </a>
+                  <PlanCta ctaText={plan.cta} />
                 </footer>
               </article>
             ))}
