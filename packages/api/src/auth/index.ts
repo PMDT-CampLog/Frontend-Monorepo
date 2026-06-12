@@ -32,7 +32,8 @@ export async function updateUserRole(role: UserRole): Promise<AuthResponse> {
 export async function processOAuth2Callback(
   provider: 'google' | 'github',
   code: string,
+  redirectUri?: string,
 ): Promise<AuthResponse> {
-  const response = await httpClient.post<AuthResponse>(`/api/v1/auth/oauth2/callback/${provider}`, { code })
+  const response = await httpClient.post<AuthResponse>(`/api/v1/auth/oauth2/callback/${provider}`, { code, redirectUri })
   return response.data
 }

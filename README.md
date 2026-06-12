@@ -7,7 +7,7 @@ SaaS modular B2B/B2C para desenvolvedores e comunidades. Unifica Wikis, Fóruns,
 ```
 camplog/
 ├── apps/
-│   ├── web/       # Pública — Landing, wikis, vitrines (Next.js SSR/SEO)
+│   ├── web/       # Pública — Landing, wikis, vitrines, login/cadastro e callback OAuth2 (Next.js SSR/SEO)
 │   └── studio/    # Privada — Dashboard, CMS, Kanban (Next.js CSR)
 ├── packages/
 │   ├── ui/        # Design System — componentes base (Tailwind CSS)

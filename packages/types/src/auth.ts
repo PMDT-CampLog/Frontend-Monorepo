@@ -19,4 +19,5 @@ export interface AuthResponse {
 export interface OAuth2CallbackRequest {
   code: string
   provider: 'google' | 'github'
+  redirectUri?: string
 }
