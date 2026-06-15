@@ -16,6 +16,7 @@
     "@camplog/module-bug-tracker": "workspace:*",
     "@camplog/api": "workspace:*",
     "@camplog/types": "workspace:*",
+    "@camplog/module-profile": "workspace:*",
     "@tanstack/react-query": "^5.64.1",
     "next": "^15.2.4",
     "react": "^19.0.0",

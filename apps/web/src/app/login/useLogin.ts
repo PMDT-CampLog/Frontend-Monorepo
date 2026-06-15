@@ -94,9 +94,11 @@ export function useLogin() {
       // Redirecionamento dinâmico baseado na role do usuário
       const role = response.user?.role || 'member'
       if (role === 'creator') {
-        window.location.href = `${STUDIO_URL}/creator`
+        window.location.href = `${STUDIO_URL}/creator?token=${response.token}`
+      } else if (role === 'member' || role === 'apoiador') {
+        window.location.href = `${STUDIO_URL}/perfil?token=${response.token}`
       } else {
-        window.location.href = `${STUDIO_URL}/`
+        window.location.href = `${STUDIO_URL}/?token=${response.token}`
       }
     } catch (err: any) {
       console.error('Login failed:', err)

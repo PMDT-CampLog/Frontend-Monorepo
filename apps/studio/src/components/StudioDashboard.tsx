@@ -498,12 +498,26 @@ export default function StudioDashboard() {
                 }}
               />
             </button>
-            <a
-              href="/creator"
+            <button
               className="studio-topbar__avatar"
               aria-label="Foto de perfil"
-              title="Dashboard do Criador"
-              style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }}
+              title="Meu Perfil"
+              onClick={() => {
+                try {
+                  const token = localStorage.getItem('camplog:token')
+                  if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1] || ''))
+                    if (payload.role === 'creator') {
+                      window.location.href = '/creator'
+                      return
+                    }
+                  }
+                  window.location.href = '/perfil'
+                } catch {
+                  window.location.href = '/perfil'
+                }
+              }}
+              style={{ display: 'block', cursor: 'pointer', border: '2px solid var(--card-border)', background: 'var(--module-bg)' }}
             />
           </div>
         </header>

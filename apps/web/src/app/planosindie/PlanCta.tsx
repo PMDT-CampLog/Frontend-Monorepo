@@ -15,8 +15,13 @@ export default function PlanCta({ ctaText }: PlanCtaProps) {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await updateUserRole('creator')
-      window.location.href = `${STUDIO_URL}/creator`
+      const response = await updateUserRole('creator')
+      if (response.token) {
+        localStorage.setItem('camplog:token', response.token)
+        window.location.href = `${STUDIO_URL}/creator?token=${response.token}`
+      } else {
+        window.location.href = `${STUDIO_URL}/creator`
+      }
     } catch (error) {
       console.error('Failed to update user role to creator:', error)
       const token = typeof window !== 'undefined' ? localStorage.getItem('camplog:token') : null

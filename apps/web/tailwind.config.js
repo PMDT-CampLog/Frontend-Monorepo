@@ -9,5 +9,6 @@ module.exports = {
     '../../packages/ui/src/**/*.{ts,tsx}',
     '../../packages/modules/wiki/src/**/*.{ts,tsx}',
     '../../packages/modules/forum/src/**/*.{ts,tsx}',
+    '../../packages/modules/profile/src/**/*.{ts,tsx}',
   ],
 }

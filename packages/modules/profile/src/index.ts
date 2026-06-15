@@ -1,0 +1,12 @@
+// Profile module — Perfil de Apoiador
+export { ProfileHeader } from './components/ProfileHeader'
+export { PostCard } from './components/PostCard'
+export { PostFeed } from './components/PostFeed'
+export { PostComposer } from './components/PostComposer'
+export { LatexRenderer } from './components/LatexRenderer'
+export { ImageUploader } from './components/ImageUploader'
+export { ProfileTabs } from './components/ProfileTabs'
+export type { TabId } from './components/ProfileTabs'
+export { ProfileEditModal } from './components/ProfileEditModal'
+export { LikedPostsFeed } from './components/LikedPostsFeed'
+export { InterestsGrid } from './components/InterestsGrid'

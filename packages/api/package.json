@@ -10,7 +10,8 @@
     "./forum": "./src/forum/index.ts",
     "./bug-tracker": "./src/bug-tracker/index.ts",
     "./projects": "./src/projects/index.ts",
-    "./auth": "./src/auth/index.ts"
+    "./auth": "./src/auth/index.ts",
+    "./profile": "./src/profile/index.ts"
   },
   "dependencies": {
     "@camplog/types": "workspace:*",

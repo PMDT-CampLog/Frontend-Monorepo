@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { DM_Sans, Lato } from 'next/font/google'
 import './globals.css'
+import StudioProviders from './providers'
 
 const lato = Lato({
   subsets: ['latin'],
@@ -23,7 +24,9 @@ export const metadata: Metadata = {
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className="dark">
-      <body className={`${lato.variable} ${dmSans.variable}`}>{children}</body>
+      <body className={`${lato.variable} ${dmSans.variable}`}>
+        <StudioProviders>{children}</StudioProviders>
+      </body>
     </html>
   )
 }
