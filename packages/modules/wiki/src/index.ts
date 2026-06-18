@@ -1,1 +1,1 @@
-export { WikiPageList } from './components/wiki-page-list'
+export * from './components/wiki-editor'

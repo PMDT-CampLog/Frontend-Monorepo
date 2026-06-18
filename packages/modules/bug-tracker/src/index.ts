@@ -1,2 +1,1 @@
-// TODO: implementar componentes e lógica do bug tracker
-export {}
+export * from './components/bug-board'

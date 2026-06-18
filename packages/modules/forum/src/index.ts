@@ -1,2 +1,1 @@
-// TODO: implementar componentes e lógica do fórum
-export {}
+export * from './components/unified-feed'
