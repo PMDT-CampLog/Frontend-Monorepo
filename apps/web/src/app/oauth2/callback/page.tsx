@@ -16,8 +16,14 @@ function OAuthCallbackHandler() {
   useEffect(() => {
     if (!searchParams) return
 
-    const providerParam = searchParams.get('provider')
+    let providerParam = searchParams.get('provider')
+    const stateParam = searchParams.get('state')
     const codeParam = searchParams.get('code')
+
+    // Se 'provider' não estiver presente na URL, tenta buscar do 'state' (OAuth real)
+    if (!providerParam && (stateParam === 'google' || stateParam === 'github')) {
+      providerParam = stateParam
+    }
 
     if ((providerParam !== 'google' && providerParam !== 'github') || !codeParam) {
       setError('Parâmetros de autenticação inválidos ou ausentes.')
