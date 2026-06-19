@@ -1,0 +1,88 @@
+# ==============================================================================
+# CampLog Frontend - Pipeline de Produção (S3 + CloudFront)
+# Disparado a cada criação de tag (ex: v1.0.0)
+# ==============================================================================
+
+when:
+  event: tag
+  tag: v*
+
+steps:
+  # --- 1. GIT (Verificar status e logs) ---
+  git-info:
+    image: alpine/git
+    commands:
+      - echo "=== [GIT INFO] Verificando sincronização com o GitHub para Produção ==="
+      - git status
+      - git log -1 --oneline
+
+  # --- 2. INSTALL (Instalar dependências com pnpm) ---
+  install-deps:
+    image: node:20-alpine
+    commands:
+      - echo "=== [INSTALL] Ativando corepack e instalando dependências com pnpm ==="
+      - corepack enable
+      - pnpm install --frozen-lockfile
+
+  # --- 3. LINT (Executar analisador estático) ---
+  lint-check:
+    image: node:20-alpine
+    commands:
+      - echo "=== [LINT] Executando eslint de Produção ==="
+      - corepack enable
+      - pnpm run lint --continue-on-error
+
+  # --- 4. TESTS (Executar testes automatizados) ---
+  test-run:
+    image: node:20-alpine
+    commands:
+      - echo "=== [TESTS] Executando testes unitários do Frontend ==="
+      - corepack enable
+      - pnpm run test
+
+  # --- 5. BUILD STATIC (Compilação Next.js para Exportação Estática) ---
+  build-static:
+    image: node:20-alpine
+    commands:
+      - echo "=== [BUILD] Compilando e gerando arquivos estáticos para o S3 ==="
+      - corepack enable
+      # NOTA CRÍTICA: Variáveis NEXT_PUBLIC devem ser fornecidas em BUILD-TIME
+      - NEXT_PUBLIC_API_URL=$${NEXT_PUBLIC_API_URL} pnpm run build
+    environment:
+      NEXT_PUBLIC_API_URL:
+        from_secret: next_public_api_url_prod
+
+  # --- 6. GET CREDENTIALS ENV (Validar acesso AWS) ---
+  get-credentials-env:
+    image: amazon/aws-cli:latest
+    commands:
+      - echo "=== [GET CREDENTIALS ENV] Validando chaves secretas e conexão AWS ==="
+      - aws sts get-caller-identity
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: us-east-1
+
+  # --- 7. DEPLOY AWS (Sincronização S3 + Invalidação CloudFront CDN) ---
+  deploy-production:
+    image: amazon/aws-cli:latest
+    commands:
+      - echo "=== [DEPLOY] Enviando Frontend para o Amazon S3 de Produção ==="
+      # Sincroniza a pasta de saída do Next.js (por padrão, apps/web/out para exportações estáticas) com o bucket S3
+      - aws s3 sync apps/web/out s3://$${AWS_S3_FRONTEND_BUCKET} --delete
+      
+      - echo "=== [DEPLOY] Invalidando cache do CloudFront para atualização global ==="
+      # Invalida todos os arquivos da CDN para atualizar os navegadores dos usuários imediatamente
+      - aws cloudfront create-invalidation --distribution-id $${AWS_CLOUDFRONT_DIST_ID} --paths "/*"
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_S3_FRONTEND_BUCKET:
+        from_secret: aws_s3_frontend_bucket
+      AWS_CLOUDFRONT_DIST_ID:
+        from_secret: aws_cloudfront_dist_id

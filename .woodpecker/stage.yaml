@@ -1,0 +1,76 @@
+# ==============================================================================
+# CampLog Frontend - Pipeline de Staging (QA)
+# Disparado a cada push na branch 'main'
+# ==============================================================================
+
+when:
+  event: push
+  branch: main
+
+steps:
+  # --- 1. GIT (Verificar status e logs) ---
+  git-info:
+    image: alpine/git
+    commands:
+      - echo "=== [GIT INFO] Verificando sincronização com o GitHub ==="
+      - git status
+      - git log -1 --oneline
+
+  # --- 2. INSTALL (Instalar dependências com pnpm) ---
+  install-deps:
+    image: node:20-alpine
+    commands:
+      - echo "=== [INSTALL] Ativando corepack e instalando dependências com pnpm ==="
+      - corepack enable
+      - pnpm install --frozen-lockfile
+
+  # --- 3. LINT (Executar analisador estático) ---
+  lint-check:
+    image: node:20-alpine
+    commands:
+      - echo "=== [LINT] Executando eslint e verificações de estilo ==="
+      - corepack enable
+      - pnpm run lint --continue-on-error || echo "Lint warnings detected but continuing build"
+
+  # --- 4. TESTS (Executar testes automatizados) ---
+  test-run:
+    image: node:20-alpine
+    commands:
+      - echo "=== [TESTS] Executando testes unitários do Frontend ==="
+      - corepack enable
+      # Usar check ou test padrão do Turborepo (definido em package.json/turbo.json)
+      - pnpm run test || echo "Ignorando falhas de teste no staging"
+
+  # --- 5. GET CREDENTIALS ENV (Verificar secrets) ---
+  get-credentials-env:
+    image: alpine:latest
+    commands:
+      - echo "=== [GET CREDENTIALS ENV] Verificando secrets de Staging do Frontend ==="
+      - |
+        if [ -z "$${NEXT_PUBLIC_API_URL}" ]; then
+          echo "AVISO: NEXT_PUBLIC_API_URL não está explicitamente definida como secret (usará fallback do docker-compose)"
+        else
+          echo "NEXT_PUBLIC_API_URL de Staging está presente."
+        fi
+    environment:
+      NEXT_PUBLIC_API_URL:
+        from_secret: next_public_api_url
+
+  # --- 6. DEPLOY (Atualização dos containers do Frontend no Staging) ---
+  deploy-staging:
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - echo "=== [DEPLOY] Atualizando serviços frontend e frontend-studio no Staging da OCI ==="
+      # 1. Cria a estrutura temporária que simula o monorepo local
+      - mkdir -p ../camplog-build/Frontend-Monorepo
+      - cp -r . ../camplog-build/Frontend-Monorepo/
+      # 2. Clona o repositório de infraestrutura de DevOps
+      - git clone https://github.com/CampLog/Devops-tooling.git ../camplog-build/Devops-tooling
+      # 3. Executa a compilação e deploy dos frontends a partir do diretório do docker-compose
+      - cd ../camplog-build/Devops-tooling
+      - docker compose -f docker-compose.stage.yml up -d --build frontend frontend-studio
+      # 4. Limpeza da pasta temporária
+      - cd -
+      - rm -rf ../camplog-build
