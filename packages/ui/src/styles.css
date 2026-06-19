@@ -1,0 +1,169 @@
+/* ─── Tokens de cor — idênticos ao apps/web ──────────────────────────────── */
+:root {
+  color-scheme: dark;
+  --bg: #0d0a1e;
+  --bg-nav: rgba(13, 10, 30, 0.75);
+
+  --heading-sm: #b0a2c7; /* Roxo pastel claro - Legibilidade WCAG AAA */
+  --heading: #fff176;
+
+  --body-text: rgba(255, 255, 255, 0.65);
+  --footer-text: rgba(255, 255, 255, 0.4);
+  --footer-link: rgba(255, 255, 255, 0.75);
+
+  --btn-entrar-bg: #2b0a4f;
+  --btn-entrar-border: #fff176;
+  --btn-entrar-text: #fff176;
+
+  --surface-elevated: rgba(13, 10, 30, 0.55);
+  --card-border: rgba(139, 92, 246, 0.28);
+  --icon-accent: #a78bfa;
+
+  --studio-logo-purple: #b0a2c7;
+  --studio-chrome: #0d0a1e;
+  --module-bg: rgba(98, 78, 115, 0.18);
+
+  --blob-purple: rgba(98, 78, 115, 0.5);
+  --blob-yellow: rgba(255, 241, 118, 0.4);
+
+  /* Variáveis Adicionais Dinâmicas */
+  --studio-text-primary: #ffffff;
+  --studio-hover-bg: rgba(255, 255, 255, 0.04);
+  --welcome-btn-bg: rgba(43, 10, 79, 0.55);
+
+  /* Variáveis para Cartões e Elementos Complexos (sincronizadas com web app) */
+  --card-bg: rgba(13, 10, 30, 0.55);
+  --card-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --card-backdrop-filter: blur(14px);
+
+  /* Variáveis para Inputs de Formulários */
+  --input-bg: rgba(8, 6, 18, 0.4);
+  --input-color: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(168, 85, 247, 0.35);
+  --input-focus-border: rgba(255, 241, 118, 0.75);
+  --input-focus-bg: rgba(8, 6, 18, 0.55);
+  --input-placeholder: #624e73;
+
+  /* Variáveis para Botões Sociais */
+  --social-btn-bg: rgba(8, 6, 18, 0.25);
+  --social-btn-color: rgba(255, 255, 255, 0.8);
+  --social-btn-border: rgba(255, 255, 255, 0.14);
+  --social-btn-hover-bg: rgba(8, 6, 18, 0.38);
+  --social-btn-hover-border: rgba(255, 241, 118, 0.35);
+
+  /* Variáveis para Botões Welcome */
+  --welcome-btn-color: #fff176;
+  --welcome-btn-border: rgba(255, 241, 118, 0.9);
+  --welcome-btn-hover-bg: rgba(71, 22, 128, 0.62);
+
+  /* Elementos adicionais */
+  --divider-color: rgba(255, 255, 255, 0.12);
+
+  /* Botão Cadastre-se */
+  --btn-cadastre-bg: #fff176;
+  --btn-cadastre-text: #1a0533;
+  --btn-cadastre-border: #fff176;
+  --btn-cadastre-hover-bg: #fff6a8;
+
+  /* Tags */
+  --tag-in-progress-border: rgba(255, 241, 118, 0.4);
+  --tag-in-progress-bg: rgba(255, 241, 118, 0.12);
+  --tag-in-progress-color: #fff176;
+  --tag-done-border: rgba(239, 68, 68, 0.4);
+  --tag-done-bg: rgba(239, 68, 68, 0.12);
+  --tag-done-color: rgb(252, 165, 165);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f4f0ff;
+    --bg-nav: rgba(244, 240, 255, 0.8);
+    --heading-sm: #523f61; /* Roxo escuro suave - Legibilidade WCAG AAA */
+    --heading: #2b0a4f;
+    --body-text: rgba(30, 10, 60, 0.65);
+    --footer-text: rgba(30, 10, 60, 0.45);
+    --footer-link: #2b0a4f;
+
+    --btn-entrar-bg: transparent;
+    --btn-entrar-border: #2b0a4f;
+    --btn-entrar-text: #2b0a4f;
+
+    --surface-elevated: rgba(255, 255, 255, 0.75);
+    --card-border: rgba(43, 10, 79, 0.15);
+    --icon-accent: #674cf0;
+
+    --studio-logo-purple: #523f61;
+    --studio-chrome: #ffffff;
+    --module-bg: rgba(43, 10, 79, 0.08);
+
+    --blob-purple: rgba(98, 78, 115, 0.15);
+    --blob-yellow: rgba(255, 241, 118, 0.1);
+
+    /* Variáveis Adicionais Dinâmicas em Modo Claro */
+    --studio-text-primary: #2b0a4f;
+    --studio-hover-bg: rgba(43, 10, 79, 0.04);
+    --welcome-btn-bg: #2b0a4f;
+
+    /* Variáveis de Cartão adaptadas para Modo Claro */
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --card-shadow: 0 18px 60px rgba(43, 10, 79, 0.08);
+    --card-backdrop-filter: blur(14px);
+
+    /* Variáveis para Inputs de Modo Claro */
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-color: #2b0a4f;
+    --input-border: rgba(43, 10, 79, 0.25);
+    --input-focus-border: #2b0a4f;
+    --input-focus-bg: #ffffff;
+    --input-placeholder: rgba(43, 10, 79, 0.45);
+
+    /* Variáveis para Botões Sociais no Modo Claro */
+    --social-btn-bg: rgba(255, 255, 255, 0.65);
+    --social-btn-color: #2b0a4f;
+    --social-btn-border: rgba(43, 10, 79, 0.15);
+    --social-btn-hover-bg: rgba(43, 10, 79, 0.05);
+    --social-btn-hover-border: #2b0a4f;
+
+    /* Variáveis para Botões Welcome no Modo Claro */
+    --welcome-btn-color: #fff176;
+    --welcome-btn-border: #2b0a4f;
+    --welcome-btn-hover-bg: #45137d;
+
+    /* Elementos adicionais no Modo Claro */
+    --divider-color: rgba(43, 10, 79, 0.12);
+
+    --btn-cadastre-bg: #2b0a4f;
+    --btn-cadastre-text: #fff176;
+    --btn-cadastre-border: #2b0a4f;
+    --btn-cadastre-hover-bg: #45137d;
+
+    /* Tags em Modo Claro com excelente contraste */
+    --tag-in-progress-border: rgba(217, 119, 6, 0.4);
+    --tag-in-progress-bg: rgba(217, 119, 6, 0.08);
+    --tag-in-progress-color: #b45309;
+    --tag-done-border: rgba(220, 38, 38, 0.4);
+    --tag-done-bg: rgba(220, 38, 38, 0.08);
+    --tag-done-color: #b91c1c;
+  }
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg);
+  color: var(--body-text);
+  font-family: var(--font-lato), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}

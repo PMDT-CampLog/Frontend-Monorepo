@@ -3,6 +3,7 @@ import bg1 from '../../assets/bg-1.png'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
 import LoginForm from './LoginForm'
+import '@/styles/auth.css'
 
 function LogoIcon() {
   return (

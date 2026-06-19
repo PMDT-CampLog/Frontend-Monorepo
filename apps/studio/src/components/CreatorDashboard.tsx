@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import '../styles/dashboard.css'
 import {
   useStudioMetrics,
   useTeamMembers,
@@ -18,48 +19,23 @@ import { ViewMediaLibrary } from './creator-views/ViewMediaLibrary'
 import { WikiEditor } from '@camplog/module-wiki'
 import { BugBoard } from '@camplog/module-bug-tracker'
 import { UnifiedFeed } from '@camplog/module-forum'
+import { LogoIcon, IconLayout, IconLock, IconEdit, IconUpload, IconList, IconLink, IconChat, IconHeart, UsersIcon, GearIcon, BookIcon, BugIcon } from '@camplog/ui'
 
 /* ──────────────────────── SVG Icons Básicos ──────────────────────── */
-function LogoIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 400 400" width={size} height={size} style={{ display: 'block', fill: 'currentColor' }}>
-      <path d="M 200 60 C 200 60 130 130 135 200 C 140 250 215 265 250 225 C 270 200 260 160 260 160 C 260 160 240 190 220 190 C 195 190 200 140 200 140 C 200 140 220 110 200 60 Z" />
-      <g>
-        <path d="M 140 270 L 151 281 L 112 305 L 151 329 L 140 340 L 89 305 Z" />
-        <path d="M 185 345 L 175 340 L 215 255 L 225 260 Z" />
-        <path d="M 260 270 L 311 305 L 260 340 L 249 329 L 288 305 L 249 281 Z" />
-      </g>
-    </svg>
-  )
-}
-
-function IconLayout() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> }
-function IconUsers() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> }
-function IconGear() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg> }
-function IconBook() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg> }
-function IconLock() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg> }
-function IconEdit() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg> }
-function IconUpload() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> }
-function IconBug() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="13" rx="5" ry="6" /><path d="M4 9l2 2M20 9l-2 2M4 15l2-2M20 15l-2-2M12 3v3M9 3h6M12 21v-3" /></svg> }
-function IconList() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg> }
-function IconLink() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg> }
-function IconChat() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg> }
-function IconHeart() { return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg> }
-
 /* ──────────────────────── Estrutura de Navegação ──────────────────────── */
 const navGroups = [
   {
     title: 'Gestão e Métricas',
     items: [
       { id: 'visao_geral', label: 'Visão Geral', icon: <IconLayout /> },
-      { id: 'equipe', label: 'Gerenciar Equipe', icon: <IconUsers /> },
-      { id: 'configuracoes', label: 'Configurações', icon: <IconGear /> },
+      { id: 'equipe', label: 'Gerenciar Equipe', icon: <UsersIcon /> },
+      { id: 'configuracoes', label: 'Configurações', icon: <GearIcon /> },
     ]
   },
   {
     title: 'Conteúdo e Doc',
     items: [
-      { id: 'wiki_publica', label: 'Wikis Públicas', icon: <IconBook /> },
+      { id: 'wiki_publica', label: 'Wikis Públicas', icon: <BookIcon /> },
       { id: 'wiki_privada', label: 'Wikis Privadas', icon: <IconLock /> },
       { id: 'blog', label: 'Blog e Publicações', icon: <IconEdit /> },
       { id: 'midia', label: 'Imagens e Mídia', icon: <IconUpload /> },
@@ -68,7 +44,7 @@ const navGroups = [
   {
     title: 'Engenharia',
     items: [
-      { id: 'bugs', label: 'Relatórios de Bugs', icon: <IconBug /> },
+      { id: 'bugs', label: 'Relatórios de Bugs', icon: <BugIcon /> },
       { id: 'changelog', label: 'Changelog', icon: <IconList /> },
       { id: 'integracoes', label: 'Integrações Externas', icon: <IconLink /> },
     ]

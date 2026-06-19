@@ -1,5 +1,6 @@
 import React from 'react'
 import bg1 from '../../assets/bg-1.png'
+import '@/styles/plans.css'
 import bg2 from '../../assets/bg-2.png'
 import NoScroll from './NoScroll'
 import PlanCta from './PlanCta'

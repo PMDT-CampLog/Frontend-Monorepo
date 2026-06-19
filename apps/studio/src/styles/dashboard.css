@@ -1,0 +1,333 @@
+/* ─── Shell: sidebar | workspace ─────────────────────────────────────────── */
+.studio-shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+/* ─── Icon-only sidebar (narrow left rail) ───────────────────────────────── */
+.studio-sidebar {
+  display: flex;
+  width: 3.5rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0 1rem;
+  background: var(--studio-chrome);
+  border-right: 1px solid var(--card-border);
+}
+
+.studio-sidebar__logo {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  color: var(--studio-logo-purple);
+}
+
+.studio-sidebar__logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
+}
+
+.studio-sidebar__nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.studio-sidebar__btn {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--studio-logo-purple);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.studio-sidebar__btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--icon-accent);
+}
+
+.studio-sidebar__btn[data-active='true'] {
+  background: rgba(98, 78, 115, 0.35);
+  color: var(--icon-accent);
+}
+
+/* ─── Workspace (topbar + main) ──────────────────────────────────────────── */
+.studio-workspace {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* ─── Topbar ─────────────────────────────────────────────────────────────── */
+.studio-topbar {
+  display: flex;
+  height: 3.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--studio-chrome);
+  padding: 0 1.25rem;
+}
+
+.studio-topbar__brand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--studio-logo-purple);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.studio-topbar__code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.studio-topbar__end {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.studio-topbar__search {
+  position: relative;
+  min-width: 8rem;
+  flex: 0 1 16rem;
+}
+
+.studio-search-icon {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--heading-sm);
+  display: flex;
+  width: 16px;
+  height: 16px;
+}
+
+.studio-search-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.studio-search-input {
+  width: 100%;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+  background: rgba(8, 6, 18, 0.55);
+  padding: 0 0.75rem 0 2rem;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.studio-search-input::placeholder {
+  color: var(--heading-sm);
+}
+
+.studio-search-input:focus {
+  border-color: rgba(255, 241, 118, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 241, 118, 0.08);
+}
+
+.studio-topbar__icon-btn {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--studio-logo-purple);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.studio-topbar__icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--icon-accent);
+}
+
+.studio-topbar__avatar {
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--card-border);
+  background: var(--module-bg);
+}
+
+/* ─── Main content area ──────────────────────────────────────────────────── */
+.studio-main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+/* ─── 3-column dashboard grid ────────────────────────────────────────────── */
+.studio-grid {
+  display: grid;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .studio-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .studio-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(200px, 280px) minmax(260px, 320px);
+  }
+}
+
+/* ─── Card module ────────────────────────────────────────────────────────── */
+.studio-card {
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: var(--surface-elevated);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Section titles ─────────────────────────────────────────────────────── */
+.studio-section-title {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--heading);
+}
+
+/* ─── Avatar placeholder ─────────────────────────────────────────────────── */
+.studio-avatar {
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--module-bg);
+  border: 2px solid var(--card-border);
+}
+
+.studio-avatar--sm {
+  width: 28px;
+  height: 28px;
+}
+
+.studio-avatar--md {
+  width: 36px;
+  height: 36px;
+}
+
+/* ─── Shortcut link items ────────────────────────────────────────────────── */
+.studio-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.studio-shortcut:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.studio-shortcut__icon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--module-bg);
+  flex-shrink: 0;
+  color: var(--icon-accent);
+}
+
+/* ─── Tag badges ─────────────────────────────────────────────────────────── */
+.studio-tag {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+/* ─── Post engagement bar ────────────────────────────────────────────────── */
+.studio-engage {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.studio-engage__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  color: var(--footer-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.studio-engage__btn:hover {
+  color: var(--icon-accent);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.studio-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--footer-text);
+}
