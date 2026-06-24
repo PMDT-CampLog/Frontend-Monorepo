@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Lato, DM_Sans } from 'next/font/google'
 import './globals.css'
-
+import { Providers } from './providers'
 // Configuração das fontes
 const lato = Lato({
   subsets: ['latin'],
@@ -24,7 +24,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className={`${lato.variable} ${dmSans.variable}`}>{children}</body>
+      <body className={`${lato.variable} ${dmSans.variable}`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

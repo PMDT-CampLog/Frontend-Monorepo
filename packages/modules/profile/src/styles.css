@@ -19,6 +19,14 @@
   align-items: start;
 }
 
+/* Novo layout de perfil público (web) */
+.profile-public-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
 .profile-sidebar-left {
   position: sticky;
   top: 6.5rem;
@@ -455,6 +463,9 @@
 
 @media (max-width: 900px) {
   .profile-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+  .profile-public-layout {
     grid-template-columns: 1fr;
   }
   .profile-sidebar-left {

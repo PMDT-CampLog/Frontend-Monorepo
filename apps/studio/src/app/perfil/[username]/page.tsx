@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import '@camplog/module-profile/styles.css'
-import { useParams } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   getProfile,
@@ -10,8 +10,11 @@ import {
   uploadAvatar,
   uploadCover,
   createPost,
+  getPublicProfile,
+  updatePublicProfile,
+  checkUsernameAvailability
 } from '@camplog/api/profile'
-import type { SupporterProfile, UpdateProfileRequest, CreatePostRequest } from '@camplog/types'
+import type { SupporterProfile, UpdateProfileRequest, CreatePostRequest, PublicProfile, UpdatePublicProfileRequest } from '@camplog/types'
 import {
   ProfileHeader,
   ProfileTabs,
@@ -58,7 +61,7 @@ function WidgetCard({ title, icon, children }: WidgetCardProps) {
   )
 }
 
-/* ──────────────────────── MAIN COMPONENT ──────────────────────── */
+/* ──────────────────────── CONSTANTES ──────────────────────── */
 
 const badges = [
   { id: 'alpha', name: 'Apoiador Alpha', desc: 'Apoiou o CampLog na fase inicial alpha' },
@@ -73,15 +76,111 @@ const discordChannels = [
   { name: 'bug-reports', users: 3 },
 ]
 
-export default function ProfilePage() {
-  const params = useParams()
-  const userId = params?.userId as string
+function UsernameOnboardingModal({ onSuccess }: { onSuccess: (username: string) => void }) {
+  const [username, setUsername] = useState('')
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null)
+  const [isChecking, setIsChecking] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
+
   const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: (data: UpdatePublicProfileRequest) => updatePublicProfile(data),
+    onSuccess: (_, variables) => {
+      onSuccess(variables.username!)
+    },
+    onError: () => {
+      setErrorMsg('Erro ao salvar o username. Tente novamente.')
+    }
+  })
+
+  useEffect(() => {
+    if (!username || username.length < 3) {
+      setIsAvailable(null)
+      setErrorMsg('O username deve ter pelo menos 3 caracteres.')
+      return
+    }
+    const timer = setTimeout(async () => {
+      setIsChecking(true)
+      try {
+        const available = await checkUsernameAvailability(username)
+        setIsAvailable(available)
+        setErrorMsg(available ? '' : 'Este username já está em uso.')
+      } catch (e: any) {
+        setIsAvailable(null)
+        setErrorMsg('Erro na verificação. Tente novamente.')
+        console.error('Username check error:', e)
+      } finally {
+        setIsChecking(false)
+      }
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [username])
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+      backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 999999,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)'
+    }}>
+      <div style={{
+        background: '#1a0533', padding: '2rem', borderRadius: '16px',
+        border: '1px solid var(--card-border)', width: '100%', maxWidth: '400px',
+        display: 'flex', flexDirection: 'column', gap: '1rem'
+      }}>
+        <h2 style={{ margin: 0, color: 'var(--heading)' }}>Bem-vindo ao CampLog!</h2>
+        <p style={{ margin: 0, color: 'var(--body-text)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+          Para continuar, você precisa definir o seu <strong>@username</strong> único. Ele será usado para o seu perfil público.
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+          <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--heading-sm)' }}>ESCOLHA SEU USERNAME</label>
+          <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--input-border)', borderRadius: '8px', padding: '0 0.75rem' }}>
+            <span style={{ color: 'var(--heading-sm)', fontWeight: 600 }}>@</span>
+            <input 
+              type="text" 
+              value={username} 
+              onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
+              placeholder="seu-estudio"
+              style={{
+                flex: 1, background: 'transparent', border: 'none', color: '#fff',
+                padding: '0.75rem 0.5rem', outline: 'none', fontSize: '0.95rem'
+              }}
+            />
+          </div>
+          {isChecking && <span style={{ fontSize: '0.75rem', color: '#06b6d4' }}>Verificando disponibilidade...</span>}
+          {!isChecking && errorMsg && <span style={{ fontSize: '0.75rem', color: '#ef4444' }}>{errorMsg}</span>}
+          {!isChecking && isAvailable && <span style={{ fontSize: '0.75rem', color: '#10b981' }}>Username disponível!</span>}
+        </div>
+
+        <button
+          disabled={!isAvailable || isChecking || mutation.isPending}
+          onClick={() => mutation.mutate({ username })}
+          style={{
+            marginTop: '1rem', width: '100%', padding: '0.75rem',
+            background: (!isAvailable || isChecking) ? 'rgba(255,255,255,0.1)' : 'var(--icon-accent)',
+            color: (!isAvailable || isChecking) ? '#888' : '#fff',
+            border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: (!isAvailable || isChecking) ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s'
+          }}
+        >
+          {mutation.isPending ? 'Salvando...' : 'Confirmar e Continuar'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function StudioProfilePage() {
+  const router = useRouter()
+  const params = useParams()
+  const queryClient = useQueryClient()
+  const username = params?.username as string
 
   const [activeTab, setActiveTab] = useState<TabId>('feed')
   const [showEditModal, setShowEditModal] = useState(false)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [showCoverUploader, setShowCoverUploader] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
 
   /* Estados para Notificações e Feedback Visual (Toast) */
   const [toastMessage, setToastMessage] = useState<string | null>(null)
@@ -126,6 +225,25 @@ export default function ProfilePage() {
     { id: 1, game: 'Nebula Chronicles', event: 'Demo Pública', date: '24/06/2026', days: 5 },
     { id: 2, game: 'Chrono Rift', event: 'Beta Fechado', date: '30/06/2026', days: 11 },
   ])
+
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search)
+      const token = urlParams.get('token') || localStorage.getItem('camplog:token')
+      
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1] || ''))
+        if (payload.userId) {
+          setUserId(payload.userId)
+          return
+        }
+      }
+      // Se não encontrou token válido ou userId, redireciona para login
+      window.location.href = 'http://localhost:3000/login'
+    } catch {
+      window.location.href = 'http://localhost:3000/login'
+    }
+  }, [])
 
   // Toast auto-clear
   useEffect(() => {
@@ -197,65 +315,48 @@ export default function ProfilePage() {
     }
   }
 
-  // Busca o perfil do usuário
-  const { data: profile, isLoading, isError } = useQuery<SupporterProfile>({
-    queryKey: ['profile', userId],
-    queryFn: () => getProfile(userId),
-    enabled: !!userId,
+  // Busca o perfil na Pokedex
+  const { data: profile, isLoading, isError } = useQuery<PublicProfile>({
+    queryKey: ['publicProfile', username],
+    queryFn: () => getPublicProfile(username),
+    enabled: !!username,
   })
 
-  // Verifica se o usuário logado é o dono do perfil
-  const currentUserId =
-    typeof window !== 'undefined'
-      ? (() => {
-          try {
-            const token = localStorage.getItem('camplog:token')
-            if (!token) return null
-            const payload = JSON.parse(atob(token.split('.')[1] || ''))
-            return payload.userId || null
-          } catch {
-            return null
-          }
-        })()
-      : null
-
-  const isOwner = currentUserId === userId
-
-  // Mutations
+  // Mutations Pokedex
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateProfileRequest) => updateProfile(data),
+    mutationFn: (data: UpdatePublicProfileRequest) => updatePublicProfile(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', userId] })
+      queryClient.invalidateQueries({ queryKey: ['publicProfile', username] })
       setShowEditModal(false)
-      showToast('Configurações de perfil atualizadas com sucesso!')
+      showToast('Configurações de perfil atualizadas com sucesso! Elas estarão visíveis em instantes.')
     },
   })
 
   const avatarMutation = useMutation({
-    mutationFn: (file: File) => uploadAvatar(file),
+    mutationFn: (file: File) => updatePublicProfile({}, file, undefined),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', userId] })
-      showToast('Avatar atualizado com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['publicProfile', username] })
+      showToast('Avatar em processamento, atualização visível em breve!')
     },
   })
 
   const coverMutation = useMutation({
-    mutationFn: (file: File) => uploadCover(file),
+    mutationFn: (file: File) => updatePublicProfile({}, undefined, file),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', userId] })
-      showToast('Foto de capa atualizada com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['publicProfile', username] })
+      showToast('Foto de capa em processamento, atualização visível em breve!')
     },
   })
 
   const postMutation = useMutation({
     mutationFn: (data: CreatePostRequest) => createPost(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts', userId] })
+      queryClient.invalidateQueries({ queryKey: ['posts', profile?.userId] })
       showToast('Postagem criada no feed!')
     },
   })
 
-  if (isLoading) {
+  if (!userId || isLoading) {
     return (
       <div className="profile-page-loading">
         <div className="loading-spinner" />
@@ -264,11 +365,33 @@ export default function ProfilePage() {
     )
   }
 
+  // Se houve erro na busca (404) e o username atual da URL for na verdade o userId do usuário,
+  // isso significa que ele está no fluxo de Onboarding (sem perfil criado ainda).
+  const isOnboarding = isError && userId === username
+
+  if (isOnboarding) {
+    return <UsernameOnboardingModal onSuccess={(newUsername) => router.replace(`/perfil/${newUsername}`)} />
+  }
+
   if (isError || !profile) {
     return (
       <div className="profile-page-error">
         <h2>Perfil não encontrado</h2>
         <p>O perfil solicitado não existe ou não está disponível.</p>
+        <button 
+          onClick={() => window.location.href = '/'}
+          style={{
+            padding: '0.5rem 1rem',
+            background: 'var(--icon-accent)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            marginTop: '1rem'
+          }}
+        >
+          Voltar para Home
+        </button>
       </div>
     )
   }
@@ -371,8 +494,8 @@ export default function ProfilePage() {
         {/* ─── CENTRO: CONTEÚDO PRINCIPAL ─── */}
         <main className="profile-center-column">
           <ProfileHeader
-            profile={profile}
-            isOwner={isOwner}
+            profile={{ ...profile, displayName: profile.username } as any}
+            isOwner={userId === profile?.userId}
             onEditClick={() => setShowEditModal(true)}
             onAvatarClick={() => setShowAvatarUploader(true)}
             onCoverClick={() => setShowCoverUploader(true)}
@@ -383,20 +506,18 @@ export default function ProfilePage() {
           <div className="profile-tab-content">
             {activeTab === 'feed' && (
               <>
-                {isOwner && (
-                  <PostComposer
-                    onSubmit={(data) => postMutation.mutate(data)}
-                    isLoading={postMutation.isPending}
-                  />
-                )}
-                <PostFeed userId={userId} />
+                <PostComposer
+                  onSubmit={(data) => postMutation.mutate(data)}
+                  isLoading={postMutation.isPending}
+                />
+                <PostFeed userId={profile.userId} />
               </>
             )}
 
-            {activeTab === 'likes' && <LikedPostsFeed userId={userId} />}
+            {activeTab === 'likes' && <LikedPostsFeed userId={profile.userId} />}
 
             {activeTab === 'interests' && (
-              <InterestsGrid interests={profile.interests || []} />
+              <InterestsGrid interests={[]} />
             )}
           </div>
         </main>
@@ -486,8 +607,8 @@ export default function ProfilePage() {
                     className={`poll-option-button ${isSelected ? 'voted' : ''}`}
                   >
                     <div className="poll-option-progress" style={{ width: `${percent}%` }} />
-                    <span style={{ position: 'relative', zIndex: 2 }}>{opt.text}</span>
-                    <span style={{ position: 'relative', zIndex: 2, fontSize: '0.75rem', color: 'var(--heading-sm)' }}>
+                    <span style={{ zIndex: 2, position: 'relative' }}>{opt.text}</span>
+                    <span style={{ zIndex: 2, position: 'relative', fontSize: '0.75rem', color: 'var(--heading-sm)' }}>
                       {percent}% ({opt.votes})
                     </span>
                   </button>
@@ -620,7 +741,7 @@ export default function ProfilePage() {
       {/* Modais */}
       {showEditModal && (
         <ProfileEditModal
-          profile={profile}
+          profile={profile as any}
           onSave={(data) => updateMutation.mutate(data)}
           onClose={() => setShowEditModal(false)}
           isLoading={updateMutation.isPending}
@@ -660,4 +781,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-

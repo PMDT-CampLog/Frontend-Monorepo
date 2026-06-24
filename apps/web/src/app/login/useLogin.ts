@@ -101,15 +101,16 @@ export function useLogin() {
         window.location.href = `${STUDIO_URL}/?token=${response.token}`
       }
     } catch (err: any) {
-      console.error('Login failed:', err)
-      
       const status = err.response?.status
       const apiErr = err.response?.data as ApiError
 
       if (status === 404) {
         // Direciona para o cadastro caso não seja cadastrado
         router.push(`/cadastro?email=${encodeURIComponent(form.email.trim())}`)
+      } else if (status === 401) {
+        setSubmitError(apiErr?.message || 'Credenciais inválidas. Verifique seu e-mail e senha.')
       } else {
+        console.warn('Login failed with status:', status)
         setSubmitError(apiErr?.message || 'Falha no login. Por favor, verifique suas credenciais.')
       }
     } finally {

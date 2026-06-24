@@ -23,3 +23,19 @@ export interface UpdateProfileRequest {
   websiteUrl?: string
   location?: string
 }
+
+export interface PublicProfile {
+  id: string
+  userId: string
+  username: string
+  bio: string | null
+  avatarUrl: string | null
+  coverUrl: string | null
+  themeColors: string | null
+}
+
+export interface UpdatePublicProfileRequest {
+  username?: string
+  bio?: string
+  themeColors?: string
+}
