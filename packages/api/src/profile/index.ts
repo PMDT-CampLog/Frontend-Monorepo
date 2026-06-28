@@ -126,6 +126,13 @@ export async function checkUsernameAvailability(username: string): Promise<boole
   return response.data.available
 }
 
+export async function searchProfiles(query: string): Promise<import('@camplog/types').PublicProfile[]> {
+  const response = await httpClient.get<import('@camplog/types').PublicProfile[]>('/api/v1/pokedex/query/search', {
+    params: { q: query },
+  })
+  return response.data
+}
+
 export async function updatePublicProfile(
   data: import('@camplog/types').UpdatePublicProfileRequest,
   avatarFile?: File,

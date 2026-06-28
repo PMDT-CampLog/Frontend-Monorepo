@@ -44,6 +44,9 @@ importers:
       '@camplog/module-profile':
         specifier: workspace:*
         version: link:../../packages/modules/profile
+      '@camplog/module-social':
+        specifier: workspace:*
+        version: link:../../packages/modules/social
       '@camplog/module-wiki':
         specifier: workspace:*
         version: link:../../packages/modules/wiki
@@ -96,6 +99,9 @@ importers:
       '@camplog/module-profile':
         specifier: workspace:*
         version: link:../../packages/modules/profile
+      '@camplog/module-social':
+        specifier: workspace:*
+        version: link:../../packages/modules/social
       '@camplog/module-wiki':
         specifier: workspace:*
         version: link:../../packages/modules/wiki
@@ -222,6 +228,9 @@ importers:
       '@camplog/api':
         specifier: workspace:*
         version: link:../../api
+      '@camplog/module-social':
+        specifier: workspace:*
+        version: link:../social
       '@camplog/types':
         specifier: workspace:*
         version: link:../../types
@@ -250,6 +259,43 @@ importers:
       '@types/katex':
         specifier: ^0.16.7
         version: 0.16.8
+      '@types/react':
+        specifier: ^19.0.8
+        version: 19.2.14
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/modules/social:
+    dependencies:
+      '@camplog/api':
+        specifier: workspace:*
+        version: link:../../api
+      '@camplog/types':
+        specifier: workspace:*
+        version: link:../../types
+      '@camplog/ui':
+        specifier: workspace:*
+        version: link:../../ui
+      '@tanstack/react-query':
+        specifier: ^5.64.1
+        version: 5.99.0(react@19.2.5)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      react:
+        specifier: ^18.3.1 || ^19.0.0
+        version: 19.2.5
+      react-dom:
+        specifier: ^18.3.1 || ^19.0.0
+        version: 19.2.5(react@19.2.5)
+    devDependencies:
+      '@camplog/config':
+        specifier: workspace:*
+        version: link:../../config
       '@types/react':
         specifier: ^19.0.8
         version: 19.2.14

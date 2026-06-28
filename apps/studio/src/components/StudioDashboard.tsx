@@ -1,7 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import '../styles/dashboard.css'
+import { searchProfiles } from '@camplog/api/profile'
 import { LogoIcon, IconHome, IconSearch, IconChat, IconPlus, IconDots, IconHeart, IconComment, IconShare, IconPlay, IconDoc, IconRss, IconCalendar, IconFlag, IconCompass, UsersIcon, GearIcon, BookIcon, BugIcon, BellIcon, BookmarkIcon } from '@camplog/ui'
 
 /* ──────────────────────── SVG Icons ──────────────────────── */
@@ -82,6 +83,47 @@ const bugItems = [
 /* ──────────────────────── Main Component ──────────────────────── */
 
 export default function StudioDashboard() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [showSearchResults, setShowSearchResults] = useState(false)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
+
+  // Close search results dropdown on clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Debounced search logic
+  useEffect(() => {
+    if (!searchQuery || searchQuery.trim().length < 2) {
+      setSearchResults([])
+      setShowSearchResults(false)
+      return
+    }
+
+    const delayDebounceFn = setTimeout(async () => {
+      setIsSearching(true)
+      try {
+        const results = await searchProfiles(searchQuery)
+        setSearchResults(results)
+        setShowSearchResults(true)
+      } catch (err) {
+        console.error('Search failed:', err)
+      } finally {
+        setIsSearching(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchQuery])
+
   return (
     <div className="studio-shell">
       {/* ── Sidebar (icon rail) ── */}
@@ -114,16 +156,108 @@ export default function StudioDashboard() {
           </a>
 
           <div className="studio-topbar__end">
-            <div className="studio-topbar__search">
+            <div ref={searchContainerRef} className="studio-topbar__search" style={{ position: 'relative' }}>
               <span className="studio-search-icon">
                 <IconSearch />
               </span>
               <input
                 type="search"
-                placeholder="Encontrar recente"
+                placeholder="Buscar por @username ou Nome..."
                 className="studio-search-input"
                 autoComplete="off"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => {
+                  if (searchResults.length > 0) setShowSearchResults(true)
+                }}
               />
+              
+              {/* Dropdown de Resultados da Pesquisa */}
+              {showSearchResults && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  marginTop: '0.5rem',
+                  background: '#130e2a',
+                  border: '1px solid var(--card-border)',
+                  borderRadius: '12px',
+                  boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)',
+                  zIndex: 99999,
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  padding: '0.5rem'
+                }}>
+                  {isSearching ? (
+                    <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--body-text)', fontSize: '0.85rem' }}>
+                      Buscando contas...
+                    </div>
+                  ) : searchResults.length === 0 ? (
+                    <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--body-text)', fontSize: '0.85rem' }}>
+                      Nenhum resultado encontrado
+                    </div>
+                  ) : (
+                    searchResults.map((p: any) => (
+                      <div
+                        key={p.id}
+                        onClick={() => {
+                          setShowSearchResults(false)
+                          // Redireciona para o perfil público do usuário
+                          window.location.href = `http://localhost:3000/perfil/${p.username}`
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.75rem',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          borderBottom: '1px solid rgba(255,255,255,0.02)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                        }}
+                      >
+                        {p.avatarUrl ? (
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.username}
+                            style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            background: 'var(--icon-accent)',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            fontSize: '0.85rem'
+                          }}>
+                            {p.username.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', textAlign: 'left' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--heading)' }}>
+                            {p.displayName || p.username}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--icon-accent)' }}>
+                            @{p.username}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
             <button type="button" className="studio-topbar__icon-btn" aria-label="Mensagens">
               <IconChat />

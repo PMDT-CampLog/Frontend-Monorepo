@@ -17,6 +17,7 @@
     "@camplog/api": "workspace:*",
     "@camplog/types": "workspace:*",
     "@camplog/module-profile": "workspace:*",
+    "@camplog/module-social": "workspace:*",
     "@tanstack/react-query": "^5.64.1",
     "next": "^15.2.4",
     "react": "^19.0.0",

@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     '@camplog/module-forum',
     '@camplog/module-bug-tracker',
     '@camplog/module-profile',
+    '@camplog/module-social',
     '@camplog/api',
   ],
 }

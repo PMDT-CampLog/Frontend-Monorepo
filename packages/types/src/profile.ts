@@ -32,6 +32,7 @@ export interface PublicProfile {
   avatarUrl: string | null
   coverUrl: string | null
   themeColors: string | null
+  role: string
 }
 
 export interface UpdatePublicProfileRequest {

@@ -383,6 +383,7 @@ export default function StudioProfilePage() {
             onEditClick={() => setShowEditModal(true)}
             onAvatarClick={() => setShowAvatarUploader(true)}
             onCoverClick={() => setShowCoverUploader(true)}
+            onPostsClick={() => setActiveTab('feed')}
           />
 
           <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />

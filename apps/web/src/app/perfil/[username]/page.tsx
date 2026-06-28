@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import '@camplog/module-profile/styles.css'
 import { useParams } from 'next/navigation'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getPublicProfile
 } from '@camplog/api/profile'
-import type { SupporterProfile, PublicProfile } from '@camplog/types'
+import type { PublicProfile } from '@camplog/types'
 import {
   ProfileHeader,
   ProfileTabs,
@@ -17,22 +17,8 @@ import {
   RightSidebar,
 } from '@camplog/module-profile'
 import type { TabId } from '@camplog/module-profile'
-import {
-  RocketIcon,
-  BellIcon,
-  EnvelopeIcon,
-  BookmarkIcon,
-  BookIcon,
-  BugIcon,
-  UsersIcon,
-  GearIcon
-} from '@camplog/ui'
-
-
-
 
 /* ──────────────────────── MAIN COMPONENT ──────────────────────── */
-
 
 export default function ProfilePage() {
   const params = useParams()
@@ -44,8 +30,6 @@ export default function ProfilePage() {
   /* Estados para Notificações e Feedback Visual (Toast) */
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [activeShortcut, setActiveShortcut] = useState<string>('apoiados')
-
-  /* ──────────────────────── ESTADOS DE WIDGETS INTERATIVOS ──────────────────────── */
 
   // Toast auto-clear
   useEffect(() => {
@@ -98,10 +82,7 @@ export default function ProfilePage() {
       : null
 
   const isOwner = profile ? currentUserId === profile.userId : false
-
-
-
-
+  const isCreator = profile?.role === 'creator' || profile?.role === 'CREATOR'
 
   if (isLoading) {
     return (
@@ -120,12 +101,11 @@ export default function ProfilePage() {
       </div>
     )
   }
+
   return (
     <div className="profile-page">
       <div className="profile-public-layout">
         
-
-
         {/* ─── CENTRO: CONTEÚDO PRINCIPAL ─── */}
         <main className="profile-center-column">
           {isOwner && (
@@ -138,10 +118,11 @@ export default function ProfilePage() {
           )}
           <ProfileHeader
             profile={{ ...profile, displayName: profile.username } as any} // Mock translation for module
-            isOwner={false}
+            isOwner={isOwner}
+            onPostsClick={() => setActiveTab('feed')}
           />
 
-          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} isCreator={isCreator} />
 
           <div className="profile-tab-content">
             {activeTab === 'feed' && (
@@ -152,14 +133,76 @@ export default function ProfilePage() {
 
             {activeTab === 'likes' && <LikedPostsFeed userId={profile.userId} />}
 
-            {activeTab === 'interests' && (
+            {activeTab === 'interests' && !isCreator && (
               <InterestsGrid interests={[]} />
+            )}
+
+            {activeTab === 'projects' && isCreator && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+                <div className="studio-card" style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--card-border)', borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--icon-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff' }}>CL</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--heading)' }}>CampLog Core</h3>
+                      <span style={{ fontSize: '0.75rem', color: '#fff176', fontWeight: 600 }}>Desenvolvimento</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--body-text)', margin: '0 0 1rem 0', lineHeight: 1.4, textAlign: 'left' }}>
+                    Sistema unificado de devlogs, wikis e fóruns integrados para comunidades de gamedev e engenharia.
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--heading-sm)' }}>
+                    <span>🚀 Ativo</span>
+                    <span>12 colaboradores</span>
+                  </div>
+                </div>
+                
+                <div className="studio-card" style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--card-border)', borderRadius: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(139, 92, 246, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--icon-accent)' }}>SDK</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--heading)' }}>Pokedex API Client</h3>
+                      <span style={{ fontSize: '0.75rem', color: '#fff176', fontWeight: 600 }}>Biblioteca</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--body-text)', margin: '0 0 1rem 0', lineHeight: 1.4, textAlign: 'left' }}>
+                    Cliente de API e injetor de dados analíticos integrado com a nossa data platform em FastAPI e Java Spring.
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--heading-sm)' }}>
+                    <span>📦 Beta</span>
+                    <span>4 colaboradores</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'wikis' && isCreator && (
+              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className="studio-card" style={{ padding: '1.25rem 1.5rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--card-border)', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ textAlign: 'left' }}>
+                    <h3 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--heading)' }}>Guia de Instalação e Configuração</h3>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--body-text)' }}>
+                      Atualizado em {new Date().toLocaleDateString('pt-BR')} • Categoria: <b>Instalação</b>
+                    </p>
+                  </div>
+                  <a href="#" style={{ fontSize: '0.85rem', color: '#fff176', fontWeight: 600, textDecoration: 'none' }}>Ler Wiki →</a>
+                </div>
+                
+                <div className="studio-card" style={{ padding: '1.25rem 1.5rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--card-border)', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ textAlign: 'left' }}>
+                    <h3 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--heading)' }}>Arquitetura de Monólitos Modulares</h3>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--body-text)' }}>
+                      Atualizado em {new Date().toLocaleDateString('pt-BR')} • Categoria: <b>Arquitetura</b>
+                    </p>
+                  </div>
+                  <a href="#" style={{ fontSize: '0.85rem', color: '#fff176', fontWeight: 600, textDecoration: 'none' }}>Ler Wiki →</a>
+                </div>
+              </div>
             )}
           </div>
         </main>
 
         {/* ─── LADO DIREITO: GRID DE WIDGETS ─── */}
-        <RightSidebar userId={profile.userId} isOwner={isOwner} />
+        <RightSidebar userId={profile.userId} isOwner={isOwner} isCreator={isCreator} />
 
       </div>
 
@@ -188,8 +231,6 @@ export default function ProfilePage() {
         </div>
       )}
 
-
-
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
@@ -199,4 +240,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-

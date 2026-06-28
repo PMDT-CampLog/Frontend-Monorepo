@@ -2,23 +2,31 @@
 
 import React from 'react'
 
-export type TabId = 'feed' | 'likes' | 'interests'
+export type TabId = 'feed' | 'likes' | 'interests' | 'projects' | 'wikis'
 
 interface ProfileTabsProps {
   activeTab: TabId
   onTabChange: (tab: TabId) => void
+  isCreator?: boolean
 }
 
-const TABS: { id: TabId; label: string }[] = [
-  { id: 'feed', label: 'Feed' },
-  { id: 'likes', label: 'Curtidas' },
-  { id: 'interests', label: 'Interesses' },
-]
+export function ProfileTabs({ activeTab, onTabChange, isCreator = false }: ProfileTabsProps) {
+  const tabs = isCreator
+    ? [
+        { id: 'feed' as TabId, label: 'Feed' },
+        { id: 'likes' as TabId, label: 'Curtidas' },
+        { id: 'projects' as TabId, label: 'Projetos' },
+        { id: 'wikis' as TabId, label: 'Wikis' },
+      ]
+    : [
+        { id: 'feed' as TabId, label: 'Feed' },
+        { id: 'likes' as TabId, label: 'Curtidas' },
+        { id: 'interests' as TabId, label: 'Interesses' },
+      ]
 
-export function ProfileTabs({ activeTab, onTabChange }: ProfileTabsProps) {
   return (
     <nav className="profile-tabs" role="tablist" aria-label="Abas do perfil">
-      {TABS.map((tab) => (
+      {tabs.map((tab) => (
         <button
           key={tab.id}
           role="tab"

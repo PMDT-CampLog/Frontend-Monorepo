@@ -11,9 +11,23 @@ import { StudioSuggestionsWidget } from './StudioSuggestionsWidget'
 interface RightSidebarProps {
   userId: string
   isOwner?: boolean
+  isCreator?: boolean
 }
 
-export function RightSidebar({ userId, isOwner = false }: RightSidebarProps) {
+export function RightSidebar({ userId, isOwner = false, isCreator = false }: RightSidebarProps) {
+  if (isCreator) {
+    return (
+      <aside className="profile-sidebar-right right-sidebar-container">
+        <DiscordWidget userId={userId} />
+        <ReleasesWidget userId={userId} />
+        <ActivePollsWidget userId={userId} />
+        <SupportGoalWidget userId={userId} />
+        <AchievementsWidget userId={userId} />
+      </aside>
+    )
+  }
+
+  // Apoiador (original)
   return (
     <aside className="profile-sidebar-right right-sidebar-container">
       <OstWidget userId={userId} isOwner={isOwner} />

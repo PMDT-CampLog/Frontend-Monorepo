@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import '../styles/dashboard.css'
+import { useQuery } from '@tanstack/react-query'
+import { getFollowers } from '@camplog/api'
+import type { ConnectionProfile } from '@camplog/types'
 import {
   useStudioMetrics,
   useTeamMembers,
@@ -60,7 +63,112 @@ const navGroups = [
 
 /* ──────────────────────── Sub-componentes das Telas ──────────────────────── */
 
-function ViewVisaoGeral() {
+interface CustomModalProps {
+  open: boolean
+  onClose: () => void
+  title: string
+  children: React.ReactNode
+}
+
+function CustomModal({ open, onClose, title, children }: CustomModalProps) {
+  if (!open) return null
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000,
+        animation: 'fadeIn 0.2s ease-out',
+      }}
+      onClick={onClose}
+    >
+      <style>{`
+        .hover-close-btn:hover {
+          color: var(--heading) !important;
+          background: rgba(255, 255, 255, 0.05);
+          transform: rotate(90deg);
+        }
+        .hover-close-btn {
+          transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+        }
+      `}</style>
+      <div
+        className="studio-card"
+        style={{
+          width: '90%',
+          maxWidth: '520px',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxShadow: '0 24px 80px rgba(0, 0, 0, 0.6)',
+          background: '#120e29',
+          border: '1px solid var(--card-border)',
+          borderRadius: '20px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '1.25rem 2rem',
+            borderBottom: '1px solid var(--card-border)',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '1.3rem',
+              fontFamily: 'var(--font-dm-sans), sans-serif',
+              fontWeight: 900,
+              color: 'var(--heading)',
+              margin: 0,
+            }}
+          >
+            {title}
+          </h2>
+          <button
+            onClick={onClose}
+            className="hover-close-btn"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--heading-sm)',
+              fontSize: '1.25rem',
+              cursor: 'pointer',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+            }}
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+        </div>
+        <div style={{ padding: '2rem', overflowY: 'auto' }}>{children}</div>
+      </div>
+    </div>
+  )
+}
+
+function ViewVisaoGeral({
+  followers,
+  onOpenFollowersModal
+}: {
+  followers: ConnectionProfile[]
+  onOpenFollowersModal: (list: ConnectionProfile[], title: string) => void
+}) {
   const { data, loading } = useStudioMetrics()
 
   if (loading) return <div style={{ color: 'var(--body-text)' }}>Carregando métricas...</div>
@@ -85,10 +193,14 @@ function ViewVisaoGeral() {
 
       {/* Métricas */}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        <div className="studio-card" style={{ padding: '1.5rem' }}>
+        <div
+          className="studio-card cursor-pointer hover:border-brand-500/50 transition-all duration-200"
+          style={{ padding: '1.5rem', cursor: 'pointer' }}
+          onClick={() => onOpenFollowersModal(followers, 'Todos os Seguidores')}
+        >
           <h3 style={{ color: 'var(--heading-sm)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Novos Seguidores</h3>
-          <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--studio-text-primary)' }}>{data.followers.total}</p>
-          <p style={{ color: '#10b981', fontSize: '0.85rem' }}>{data.followers.trend} esta semana</p>
+          <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--studio-text-primary)' }}>{followers.length}</p>
+          <p style={{ color: '#10b981', fontSize: '0.85rem' }}>Clique para ver todos os seguidores</p>
         </div>
         <div className="studio-card" style={{ padding: '1.5rem' }}>
           <h3 style={{ color: 'var(--heading-sm)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Bugs Críticos Abertos</h3>
@@ -107,6 +219,223 @@ function ViewVisaoGeral() {
         <button className="studio-sidebar__btn" style={{ background: 'var(--icon-accent)', color: '#fff', fontWeight: 600, padding: '0.75rem 1.5rem', borderRadius: '8px' }}>+ Nova Publicação</button>
         <button className="studio-sidebar__btn" style={{ background: 'var(--card-border)', color: 'var(--heading)', fontWeight: 600, padding: '0.75rem 1.5rem', borderRadius: '8px' }}>Registrar Bug</button>
       </section>
+    </div>
+  )
+}
+
+const groupFollowersByHour = (followersList: ConnectionProfile[]) => {
+  const groups: Record<string, ConnectionProfile[]> = {}
+
+  followersList.forEach((f) => {
+    const date = new Date(f.connectedAt)
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    const h = String(date.getHours()).padStart(2, '0')
+    const key = `${y}-${m}-${d} ${h}:00`
+
+    if (!groups[key]) {
+      groups[key] = []
+    }
+    groups[key].push(f)
+  })
+
+  return Object.keys(groups)
+    .sort((a, b) => b.localeCompare(a))
+    .map((key) => {
+      const date = new Date(key.replace(' ', 'T'))
+      const nextHour = new Date(date.getTime() + 60 * 60 * 1000)
+      const displayHour = `${date.toLocaleDateString('pt-BR')} ${String(date.getHours()).padStart(2, '0')}:00 - ${String(nextHour.getHours()).padStart(2, '0')}:00`
+
+      return {
+        hourKey: key,
+        displayHour,
+        followers: groups[key] || [],
+      }
+    })
+}
+
+function ViewEngajamento({
+  followers,
+  onOpenFollowersModal,
+}: {
+  followers: ConnectionProfile[]
+  onOpenFollowersModal: (list: ConnectionProfile[], title: string) => void
+}) {
+  const grouped = groupFollowersByHour(followers)
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="studio-card" style={{ padding: '1.5rem' }}>
+        <h2 style={{ color: 'var(--heading)', fontSize: '1.25rem', marginBottom: '0.5rem', fontWeight: 700 }}>
+          Atividade de Engajamento
+        </h2>
+        <p style={{ color: 'var(--body-text)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+          Monitore novos seguidores e interações agrupadas por hora de recebimento.
+        </p>
+
+        {grouped.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--body-text)' }}>
+            Nenhum seguidor recente para exibir no painel de engajamento.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {grouped.map((group) => {
+              const isSingle = group.followers.length === 1
+              const firstFollower = group.followers[0]
+              if (!firstFollower) return null
+
+              const handleBarClick = () => {
+                if (isSingle) {
+                  window.open(`http://localhost:3000/perfil/${firstFollower.displayName}`, '_blank')
+                } else {
+                  onOpenFollowersModal(group.followers, `Seguidores em ${group.displayHour}`)
+                }
+              }
+
+              return (
+                <div
+                  key={group.hourKey}
+                  onClick={handleBarClick}
+                  className="studio-card hover:border-brand-500/50 transition-all duration-200"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '1.25rem',
+                    cursor: 'pointer',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '12px',
+                    border: '1px solid var(--card-border)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                      {isSingle ? (
+                        firstFollower.avatarUrl ? (
+                          <img
+                            src={firstFollower.avatarUrl}
+                            alt={firstFollower.displayName}
+                            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            background: 'var(--icon-accent)',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                          }}>
+                            {firstFollower.displayName.charAt(0).toUpperCase()}
+                          </div>
+                        )
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          {group.followers.slice(0, 3).map((f, idx) => (
+                            <div
+                              key={f.profileId}
+                              style={{
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: '50%',
+                                background: 'var(--icon-accent)',
+                                border: '2px solid var(--bg)',
+                                marginLeft: idx > 0 ? '-12px' : '0px',
+                                overflow: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                color: '#fff',
+                                zIndex: 10 - idx,
+                              }}
+                            >
+                              {f.avatarUrl ? (
+                                <img src={f.avatarUrl} alt={f.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                f.displayName.charAt(0).toUpperCase()
+                              )}
+                            </div>
+                          ))}
+                          {group.followers.length > 3 && (
+                            <div style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              background: 'var(--card-border)',
+                              border: '2px solid var(--bg)',
+                              marginLeft: '-12px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.7rem',
+                              fontWeight: 'bold',
+                              color: 'var(--heading)',
+                              zIndex: 5,
+                            }}>
+                              +{group.followers.length - 3}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: 0, textAlign: 'left' }}>
+                      {isSingle ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, color: 'var(--heading)', fontSize: '0.95rem' }}>
+                              {firstFollower.displayName}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: '0.65rem',
+                                fontWeight: 800,
+                                padding: '0.15rem 0.4rem',
+                                borderRadius: '99px',
+                                background: firstFollower.profileType === 'CREATOR' ? 'rgba(139, 92, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)',
+                                color: firstFollower.profileType === 'CREATOR' ? 'var(--icon-accent)' : '#10b981',
+                              }}
+                            >
+                              {firstFollower.profileType === 'CREATOR' ? 'Criador' : 'Apoiador'}
+                            </span>
+                          </div>
+                          {firstFollower.bio && (
+                            <p style={{ color: 'var(--body-text)', fontSize: '0.8rem', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {firstFollower.bio}
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <div>
+                          <span style={{ fontWeight: 700, color: 'var(--heading)', fontSize: '0.95rem' }}>
+                            {group.followers.length} novos seguidores
+                          </span>
+                          <p style={{ color: 'var(--body-text)', fontSize: '0.8rem', margin: '0.25rem 0 0 0' }}>
+                            {group.followers.slice(0, 3).map((f) => f.displayName).join(', ')}
+                            {group.followers.length > 3 ? ' e outros' : ''} começaram a seguir você.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ color: 'var(--heading-sm)', fontSize: '0.8rem', fontWeight: 600, paddingLeft: '1rem' }}>
+                    {isSingle
+                      ? new Date(firstFollower.connectedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                      : new Date(group.hourKey.replace(' ', 'T')).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -158,6 +487,35 @@ export default function CreatorDashboard() {
     y: number
     align: 'top' | 'right'
   } | null>(null)
+
+  // Busca os seguidores em tempo real usando o React Query
+  const { data: followersData } = useQuery({
+    queryKey: ['followers', userId, 'CREATOR'],
+    queryFn: () => getFollowers(userId!, 'CREATOR', 0, 1000),
+    enabled: !!userId,
+  })
+
+  const followersList = followersData?.content || []
+
+  // Estados do modal de seguidores
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
+  const [modalFollowersList, setModalFollowersList] = useState<ConnectionProfile[]>([])
+  const [modalTitle, setModalTitle] = useState('Seguidores')
+
+  const handleOpenFollowersModal = (list: ConnectionProfile[], title: string) => {
+    // Ordena por criadores primeiro (recente -> antigo), depois apoiadores (recente -> antigo)
+    const sorted = [...list].sort((a, b) => {
+      const aIsCreator = a.profileType === 'CREATOR' ? 1 : 0
+      const bIsCreator = b.profileType === 'CREATOR' ? 1 : 0
+      if (aIsCreator !== bIsCreator) {
+        return bIsCreator - aIsCreator
+      }
+      return new Date(b.connectedAt).getTime() - new Date(a.connectedAt).getTime()
+    })
+    setModalFollowersList(sorted)
+    setModalTitle(title)
+    setIsFollowersModalOpen(true)
+  }
 
   // 1. Verificação de Autenticação e Papel (Role)
   useEffect(() => {
@@ -223,7 +581,19 @@ export default function CreatorDashboard() {
   const renderContent = () => {
     switch (activeTabId) {
       case 'visao_geral':
-        return <ViewVisaoGeral />
+        return (
+          <ViewVisaoGeral
+            followers={followersList}
+            onOpenFollowersModal={handleOpenFollowersModal}
+          />
+        )
+      case 'ranking':
+        return (
+          <ViewEngajamento
+            followers={followersList}
+            onOpenFollowersModal={handleOpenFollowersModal}
+          />
+        )
       case 'equipe':
         return <ViewTeamManager />
       case 'configuracoes':
@@ -713,6 +1083,99 @@ export default function CreatorDashboard() {
           )}
         </div>
       )}
+      {/* Modais de Conexões */}
+      <CustomModal
+        open={isFollowersModalOpen}
+        onClose={() => setIsFollowersModalOpen(false)}
+        title={modalTitle}
+      >
+        <p style={{ fontSize: '0.75rem', color: 'var(--body-text)', marginBottom: '1rem', textAlign: 'left' }}>
+          Seguidores ordenados por prioridade (criadores mais recentes primeiro, seguidos por apoiadores).
+        </p>
+        
+        {modalFollowersList.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0', color: 'var(--body-text)', fontSize: '0.85rem' }}>
+            Nenhum seguidor encontrado.
+          </div>
+        ) : (
+          <div style={{ maxHeight: '300px', overflowY: 'auto', paddingRight: '4px' }}>
+            {modalFollowersList.map((item) => (
+              <div
+                key={item.profileId}
+                onClick={() => {
+                  if (item.username) {
+                    window.location.href = `http://localhost:3000/perfil/${item.username}`
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.75rem',
+                  borderRadius: '12px',
+                  border: '1px solid var(--card-border)',
+                  background: 'rgba(255, 255, 255, 0.01)',
+                  marginBottom: '0.5rem',
+                  transition: 'all 0.2s',
+                  cursor: item.username ? 'pointer' : 'default'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  {item.avatarUrl ? (
+                    <img
+                      src={item.avatarUrl}
+                      alt={item.displayName}
+                      style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'var(--icon-accent)',
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '0.85rem'
+                    }}>
+                      {item.displayName?.charAt(0)?.toUpperCase() || '?'}
+                    </div>
+                  )}
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--heading)' }}>
+                        {item.displayName}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.6rem',
+                          fontWeight: 800,
+                          padding: '0.1rem 0.35rem',
+                          borderRadius: '99px',
+                          background: item.profileType === 'CREATOR' ? 'rgba(139, 92, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)',
+                          color: item.profileType === 'CREATOR' ? 'var(--icon-accent)' : '#10b981',
+                        }}
+                      >
+                        {item.profileType === 'CREATOR' ? 'CRIADOR' : 'APOIADOR'}
+                      </span>
+                    </div>
+                    {item.bio && (
+                      <p style={{ color: 'var(--body-text)', fontSize: '0.75rem', margin: '0.15rem 0 0 0', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 1 }}>
+                        {item.bio}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <span style={{ fontSize: '0.7rem', color: 'var(--heading-sm)' }}>
+                  {new Date(item.connectedAt).toLocaleDateString('pt-BR')}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </CustomModal>
     </div>
   )
 }

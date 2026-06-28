@@ -1,0 +1,100 @@
+/**
+ * Estilos complementares do FollowButton.
+ *
+ * As classes base (cores, padding, border-radius) são gerenciadas pelo CVA + Tailwind
+ * no componente. Este CSS adiciona micro-animações e efeitos que não são possíveis
+ * ou ergonômicos de expressar com utility classes:
+ * - Animação de rotação do spinner
+ * - Transição suave entre estados de texto (scale + opacity)
+ * - Efeito de ripple no clique
+ */
+
+/* --- Spinner de Loading --- */
+.follow-button__spinner {
+  animation: follow-spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes follow-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Micro-animação no texto do botão --- */
+.follow-button span {
+  display: inline-block;
+  transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+.follow-button:active span {
+  transform: scale(0.95);
+}
+
+/* --- Efeito de pulso sutil ao mudar de estado --- */
+.follow-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.follow-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+  background: radial-gradient(circle at center, currentColor 0%, transparent 70%);
+}
+
+.follow-button:active::after {
+  opacity: 0.08;
+}
+
+/* --- Transição suave entre as 3 variantes de cor --- */
+.follow-button {
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    color 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    transform 0.15s ease-out;
+}
+
+.follow-button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.follow-button:active {
+  transform: scale(0.97);
+}
+
+/* --- Animação de entrada para o ícone de check --- */
+.follow-button svg:not(.follow-button__spinner) {
+  animation: follow-check-in 0.25s ease-out;
+}
+
+@keyframes follow-check-in {
+  from {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* --- Acessibilidade: respeita prefers-reduced-motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .follow-button,
+  .follow-button span,
+  .follow-button svg,
+  .follow-button__spinner {
+    animation: none !important;
+    transition: none !important;
+  }
+}
