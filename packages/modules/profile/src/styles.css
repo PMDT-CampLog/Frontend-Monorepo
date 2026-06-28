@@ -41,6 +41,20 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  padding-right: 0.5rem; /* space for scrollbar */
+}
+
+.profile-sidebar-right::-webkit-scrollbar {
+  width: 4px;
+}
+.profile-sidebar-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+.profile-sidebar-right::-webkit-scrollbar-thumb {
+  background-color: var(--card-border);
+  border-radius: 4px;
 }
 
 .profile-center-column {

@@ -1,5 +1,5 @@
 {
-  "extends": "@camplog/config/tsconfig/base.json",
+  "extends": "@camplog/config/tsconfig/base",
   "include": ["src"],
   "exclude": ["node_modules"]
 }

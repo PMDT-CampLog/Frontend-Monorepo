@@ -11,7 +11,8 @@
     "./bug-tracker": "./src/bug-tracker/index.ts",
     "./projects": "./src/projects/index.ts",
     "./auth": "./src/auth/index.ts",
-    "./profile": "./src/profile/index.ts"
+    "./profile": "./src/profile/index.ts",
+    "./profile/right-sidebar": "./src/profile/right-sidebar.ts"
   },
   "dependencies": {
     "@camplog/types": "workspace:*",
