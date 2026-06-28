@@ -24,6 +24,13 @@ import { BugBoard } from '@camplog/module-bug-tracker'
 import { UnifiedFeed } from '@camplog/module-forum'
 import { LogoIcon, IconLayout, IconLock, IconEdit, IconUpload, IconList, IconLink, IconChat, IconHeart, UsersIcon, GearIcon, BookIcon, BugIcon } from '@camplog/ui'
 
+import { PostModal } from './creator-modals/PostModal'
+import { LaunchModal } from './creator-modals/LaunchModal'
+import { BugModal } from './creator-modals/BugModal'
+import { WikiModal } from './creator-modals/WikiModal'
+import { InviteModal } from './creator-modals/InviteModal'
+import { MessageModal } from './creator-modals/MessageModal'
+
 /* ──────────────────────── SVG Icons Básicos ──────────────────────── */
 /* ──────────────────────── Estrutura de Navegação ──────────────────────── */
 const navGroups = [
@@ -33,6 +40,7 @@ const navGroups = [
       { id: 'visao_geral', label: 'Visão Geral', icon: <IconLayout /> },
       { id: 'equipe', label: 'Gerenciar Equipe', icon: <UsersIcon /> },
       { id: 'configuracoes', label: 'Configurações', icon: <GearIcon /> },
+      { id: 'perfil_publico', label: 'Perfil Público', icon: <IconLink /> },
     ]
   },
   {
@@ -164,12 +172,22 @@ function CustomModal({ open, onClose, title, children }: CustomModalProps) {
 
 function ViewVisaoGeral({
   followers,
-  onOpenFollowersModal
+  onOpenFollowersModal,
+  setActiveTabId,
+  username
 }: {
   followers: ConnectionProfile[]
   onOpenFollowersModal: (list: ConnectionProfile[], title: string) => void
+  setActiveTabId: (id: string) => void
+  username?: string
 }) {
   const { data, loading } = useStudioMetrics()
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false)
+  const [isLaunchModalOpen, setIsLaunchModalOpen] = useState(false)
+  const [isBugModalOpen, setIsBugModalOpen] = useState(false)
+  const [isWikiModalOpen, setIsWikiModalOpen] = useState(false)
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
 
   if (loading) return <div style={{ color: 'var(--body-text)' }}>Carregando métricas...</div>
 
@@ -177,10 +195,28 @@ function ViewVisaoGeral({
   const storageLimitMB = (data.storage.limit / (1024 * 1024)).toFixed(1)
   const storagePercent = (data.storage.used / data.storage.limit) * 100
 
+  const buttonStyle = {
+    flex: '1 1 200px',
+    background: 'var(--card-border)',
+    color: 'var(--heading)',
+    fontWeight: 600,
+    padding: '0.75rem 1rem',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: 'pointer',
+    textAlign: 'center' as const,
+    fontSize: '0.85rem',
+    transition: 'background 0.2s'
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Storage Progress */}
-      <section className="studio-card" style={{ padding: '1.5rem' }}>
+      <section 
+        className="studio-card cursor-pointer hover:border-brand-500/50 transition-all duration-200" 
+        style={{ padding: '1.5rem', cursor: 'pointer' }}
+        onClick={() => setActiveTabId('midia')}
+      >
         <h3 style={{ color: 'var(--heading-sm)', fontSize: '0.85rem', marginBottom: '0.75rem' }}>Armazenamento Mensal (Plano Indie)</h3>
         <div style={{ background: 'var(--card-border)', borderRadius: '8px', height: '12px', overflow: 'hidden', marginBottom: '0.5rem' }}>
           <div style={{ width: `${storagePercent}%`, height: '100%', background: 'var(--icon-accent)', transition: 'width 0.3s' }} />
@@ -189,6 +225,7 @@ function ViewVisaoGeral({
           <span>{storageUsedMB} MB utilizados</span>
           <span>{storageLimitMB} MB limite</span>
         </div>
+        <p style={{ color: '#10b981', fontSize: '0.85rem', marginTop: '0.5rem' }}>Clique para abrir imagens e mídia</p>
       </section>
 
       {/* Métricas */}
@@ -202,23 +239,63 @@ function ViewVisaoGeral({
           <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--studio-text-primary)' }}>{followers.length}</p>
           <p style={{ color: '#10b981', fontSize: '0.85rem' }}>Clique para ver todos os seguidores</p>
         </div>
-        <div className="studio-card" style={{ padding: '1.5rem' }}>
+        <div 
+          className="studio-card cursor-pointer hover:border-brand-500/50 transition-all duration-200" 
+          style={{ padding: '1.5rem', cursor: 'pointer' }}
+          onClick={() => setActiveTabId('bugs')}
+        >
           <h3 style={{ color: 'var(--heading-sm)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Bugs Críticos Abertos</h3>
           <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--studio-text-primary)' }}>{data.bugs.critical}</p>
-          <p style={{ color: '#ef4444', fontSize: '0.85rem' }}>De {data.bugs.open} total em aberto</p>
+          <p style={{ color: '#ef4444', fontSize: '0.85rem' }}>De {data.bugs.open} total em aberto (Clique para ver relatórios)</p>
         </div>
         <div className="studio-card" style={{ padding: '1.5rem' }}>
           <h3 style={{ color: 'var(--heading-sm)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Visualizações da Semana</h3>
           <p style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--studio-text-primary)' }}>{data.views.weekly}</p>
-          <p style={{ color: 'var(--body-text)', fontSize: '0.85rem' }}>Em todas as wikis e blogs</p>
+          <p style={{ color: 'var(--body-text)', fontSize: '0.85rem' }}>Acessos reais ao seu perfil público</p>
         </div>
       </section>
 
       {/* Quick Actions */}
-      <section style={{ display: 'flex', gap: '1rem' }}>
-        <button className="studio-sidebar__btn" style={{ background: 'var(--icon-accent)', color: '#fff', fontWeight: 600, padding: '0.75rem 1.5rem', borderRadius: '8px' }}>+ Nova Publicação</button>
-        <button className="studio-sidebar__btn" style={{ background: 'var(--card-border)', color: 'var(--heading)', fontWeight: 600, padding: '0.75rem 1.5rem', borderRadius: '8px' }}>Registrar Bug</button>
+      <section style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+        <button 
+          onClick={() => window.open(`http://localhost:3000/perfil/${username || 'criador'}`, '_blank')} 
+          style={{ ...buttonStyle }}
+        >Ver Perfil Público</button>
+        <button 
+          onClick={() => setIsPostModalOpen(true)}
+          style={buttonStyle}
+        >Nova Publicação</button>
+        <button onClick={() => setIsLaunchModalOpen(true)} style={buttonStyle}>Registrar Lançamento</button>
+        <button onClick={() => setIsBugModalOpen(true)} style={buttonStyle}>Registrar Bug</button>
+        <button onClick={() => setIsWikiModalOpen(true)} style={buttonStyle}>Nova Wiki</button>
+        <button onClick={() => setIsInviteModalOpen(true)} style={buttonStyle}>Convidar Membro</button>
+        <button onClick={() => setIsMessageModalOpen(true)} style={buttonStyle}>Enviar Mensagem</button>
       </section>
+
+      {/* Modais */}
+      <CustomModal open={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} title="Nova Publicação">
+        <PostModal onClose={() => setIsPostModalOpen(false)} />
+      </CustomModal>
+
+      <CustomModal open={isLaunchModalOpen} onClose={() => setIsLaunchModalOpen(false)} title="Registrar Lançamento">
+        <LaunchModal onClose={() => setIsLaunchModalOpen(false)} />
+      </CustomModal>
+
+      <CustomModal open={isBugModalOpen} onClose={() => setIsBugModalOpen(false)} title="Registrar Bug">
+        <BugModal onClose={() => setIsBugModalOpen(false)} />
+      </CustomModal>
+
+      <CustomModal open={isWikiModalOpen} onClose={() => setIsWikiModalOpen(false)} title="Nova Wiki">
+        <WikiModal onClose={() => setIsWikiModalOpen(false)} />
+      </CustomModal>
+
+      <CustomModal open={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} title="Convidar Membro">
+        <InviteModal onClose={() => setIsInviteModalOpen(false)} />
+      </CustomModal>
+
+      <CustomModal open={isMessageModalOpen} onClose={() => setIsMessageModalOpen(false)} title="Chats Abertos">
+        <MessageModal onClose={() => setIsMessageModalOpen(false)} />
+      </CustomModal>
     </div>
   )
 }
@@ -585,6 +662,8 @@ export default function CreatorDashboard() {
           <ViewVisaoGeral
             followers={followersList}
             onOpenFollowersModal={handleOpenFollowersModal}
+            setActiveTabId={setActiveTabId}
+            username={followersList.length > 0 ? followersList[0].username : 'criador'} // Simulando o username do criador
           />
         )
       case 'ranking':
@@ -940,7 +1019,13 @@ export default function CreatorDashboard() {
                     >
                       <button
                         type="button"
-                        onClick={() => setActiveTabId(item.id)}
+                        onClick={() => {
+                          if (item.id === 'perfil_publico') {
+                            window.open(`http://localhost:3000/perfil/criador`, '_blank')
+                          } else {
+                            setActiveTabId(item.id)
+                          }
+                        }}
                         style={{
                           display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.65rem', borderRadius: '8px', border: 'none', cursor: 'pointer', textAlign: 'left',
                           background: isActive ? 'linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05))' : 'transparent',
@@ -954,7 +1039,7 @@ export default function CreatorDashboard() {
                         onMouseEnter={(e) => {
                           const rect = e.currentTarget.getBoundingClientRect()
                           setActiveTooltip({
-                            text: itemDescriptions[item.id] || '',
+                            text: itemDescriptions[item.id] || (item.id === 'perfil_publico' ? 'Visualizar como os usuários veem o seu perfil.' : ''),
                             x: rect.right + 8,
                             y: rect.top + rect.height / 2,
                             align: 'right'
