@@ -663,7 +663,7 @@ export default function CreatorDashboard() {
             followers={followersList}
             onOpenFollowersModal={handleOpenFollowersModal}
             setActiveTabId={setActiveTabId}
-            username={followersList.length > 0 ? followersList[0].username : 'criador'} // Simulando o username do criador
+            username={followersList[0]?.username ?? 'criador'}
           />
         )
       case 'ranking':
