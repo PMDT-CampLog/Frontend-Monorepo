@@ -116,6 +116,16 @@ export async function getPublicProfile(username: string): Promise<import('@campl
   return response.data
 }
 
+//Arroba
+export async function checkArrobaAvailability(arroba: string): Promise<boolean> {
+  const response = await httpClient.get<{available: boolean}>(`/api/v1/pokedex/check/arroba`, { params: { arroba: arroba } })
+  return response.data.available
+}
+
+export async function saveArroba(arroba: string): Promise<void> {
+  await httpClient.post(`/api/v1/pokedex/arroba`, {arroba: arroba})
+}
+
 export async function getPublicProfileByUserId(userId: string): Promise<import('@camplog/types').PublicProfile> {
   const response = await httpClient.get<import('@camplog/types').PublicProfile>(`/api/v1/pokedex/user/${userId}`)
   return response.data
