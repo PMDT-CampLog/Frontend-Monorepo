@@ -5,7 +5,7 @@ import type { CreatePostRequest } from '@camplog/types'
 import { LatexRenderer } from './LatexRenderer'
 
 interface PostComposerProps {
-  onSubmit: (data: CreatePostRequest) => void
+  onSubmit: (data: CreatePostRequest, file?: File) => void
   isLoading?: boolean
 }
 
@@ -13,19 +13,31 @@ export function PostComposer({ onSubmit, isLoading = false }: PostComposerProps)
   const [content, setContent] = useState('')
   const [latexEnabled, setLatexEnabled] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!content.trim()) return
+    if (!content.trim() && !selectedFile) return
 
     onSubmit({
       content: content.trim(),
-      type: 'TEXT',
+      type: selectedFile ? 'IMAGE' : 'TEXT',
       latexEnabled,
-    })
+    }, selectedFile || undefined)
 
     setContent('')
     setShowPreview(false)
+    setSelectedFile(null)
+    setPreviewUrl(null)
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
+    }
   }
 
   return (
@@ -46,10 +58,33 @@ export function PostComposer({ onSubmit, isLoading = false }: PostComposerProps)
               disabled={isLoading}
             />
           )}
+          {previewUrl && (
+            <div style={{ marginTop: '0.5rem', position: 'relative', display: 'inline-block' }}>
+              <img src={previewUrl} alt="Preview" style={{ maxHeight: '200px', borderRadius: '8px', objectFit: 'cover' }} />
+              <button
+                type="button"
+                onClick={() => { setSelectedFile(null); setPreviewUrl(null) }}
+                style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.6)', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="post-composer-toolbar">
           <div className="post-composer-options">
+            <label className="post-composer-toggle" style={{ cursor: 'pointer' }}>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+                disabled={isLoading}
+              />
+              <span style={{ fontSize: '1.2rem' }}>📎</span>
+              <span className="toggle-label" style={{ marginLeft: '4px' }}>Imagem</span>
+            </label>
             <label className="post-composer-toggle" htmlFor="latex-toggle">
               <input
                 id="latex-toggle"
@@ -77,7 +112,7 @@ export function PostComposer({ onSubmit, isLoading = false }: PostComposerProps)
           <button
             type="submit"
             className="btn-publish"
-            disabled={!content.trim() || isLoading}
+            disabled={(!content.trim() && !selectedFile) || isLoading}
           >
             {isLoading ? 'Publicando...' : 'Publicar'}
           </button>

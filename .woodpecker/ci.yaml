@@ -44,7 +44,7 @@ steps:
     commands:
       - echo "=== [TESTS] Executando suite de testes automatizados ==="
       - corepack enable
-      - pnpm run test || echo "Testes finalizados"
+      - pnpm run test
 
   # --- 5. DOCKER BUILD & TAG (Gera imagens de acordo com o ambiente) ---
   build-docker:

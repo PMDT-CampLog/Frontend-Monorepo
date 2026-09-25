@@ -6,6 +6,7 @@ import * as api from '@camplog/api/profile'
 
 vi.mock('@camplog/api/profile', () => ({
   getSpotifyStatus: vi.fn(),
+  getSpotifyAuthUrl: vi.fn(),
 }))
 
 const queryClient = new QueryClient({
@@ -32,12 +33,12 @@ describe('OstWidget', () => {
     vi.mocked(api.getSpotifyStatus).mockResolvedValueOnce({ connected: false })
     render(
       <QueryClientProvider client={queryClient}>
-        <OstWidget userId="1" />
+        <OstWidget userId="1" isOwner={true} />
       </QueryClientProvider>
     )
     
     await waitFor(() => {
-      expect(screen.getByText('Spotify não conectado')).toBeInTheDocument()
+      expect(screen.getByText('Conectar com Spotify')).toBeInTheDocument()
     })
     
     // Ensure no emojis
@@ -47,16 +48,16 @@ describe('OstWidget', () => {
   })
 
   it('renders connected state with iframe', async () => {
-    vi.mocked(api.getSpotifyStatus).mockResolvedValueOnce({ connected: true, playlistUrl: 'https://open.spotify.com/embed/playlist/123' })
+    vi.mocked(api.getSpotifyStatus).mockResolvedValueOnce({ connected: true, trackId: '123' })
     render(
       <QueryClientProvider client={queryClient}>
-        <OstWidget userId="1" />
+        <OstWidget userId="1" isOwner={true} />
       </QueryClientProvider>
     )
     
     await waitFor(() => {
       expect(screen.getByTitle('Spotify Player')).toBeInTheDocument()
-      expect(screen.getByTitle('Spotify Player')).toHaveAttribute('src', 'https://open.spotify.com/embed/playlist/123')
+      expect(screen.getByTitle('Spotify Player')).toHaveAttribute('src', 'https://open.spotify.com/embed/track/123?utm_source=generator')
     })
   })
 })

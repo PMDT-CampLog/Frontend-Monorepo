@@ -15,7 +15,9 @@ import {
   LikedPostsFeed,
   InterestsGrid,
   RightSidebar,
+  ImageUploader,
 } from '@camplog/module-profile'
+import { uploadAvatar, uploadCover } from '@camplog/api/profile'
 import type { TabId } from '@camplog/module-profile'
 
 /* ──────────────────────── MAIN COMPONENT ──────────────────────── */
@@ -30,6 +32,11 @@ export default function ProfilePage() {
   /* Estados para Notificações e Feedback Visual (Toast) */
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [activeShortcut, setActiveShortcut] = useState<string>('apoiados')
+
+  /* Estados para Uploads */
+  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
+  const [showCoverUploader, setShowCoverUploader] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
 
   // Toast auto-clear
   useEffect(() => {
@@ -102,6 +109,36 @@ export default function ProfilePage() {
     )
   }
 
+  const handleAvatarCrop = async (blob: Blob) => {
+    try {
+      setIsUploading(true)
+      showToast('Enviando nova foto de perfil...')
+      const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
+      await uploadAvatar(file)
+      await queryClient.invalidateQueries({ queryKey: ['publicProfile', username] })
+      showToast('Foto de perfil atualizada!')
+    } catch (err) {
+      showToast('Erro ao atualizar foto de perfil.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleCoverCrop = async (blob: Blob) => {
+    try {
+      setIsUploading(true)
+      showToast('Enviando nova capa...')
+      const file = new File([blob], 'cover.jpg', { type: 'image/jpeg' })
+      await uploadCover(file)
+      await queryClient.invalidateQueries({ queryKey: ['publicProfile', username] })
+      showToast('Capa atualizada!')
+    } catch (err) {
+      showToast('Erro ao atualizar capa.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   return (
     <div className="profile-page">
       <div className="profile-public-layout">
@@ -120,6 +157,8 @@ export default function ProfilePage() {
             profile={{ ...profile, displayName: profile.username } as any} // Mock translation for module
             isOwner={isOwner}
             onPostsClick={() => setActiveTab('feed')}
+            onAvatarClick={() => setShowAvatarUploader(true)}
+            onCoverClick={() => setShowCoverUploader(true)}
           />
 
           <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} isCreator={isCreator} />
@@ -229,6 +268,24 @@ export default function ProfilePage() {
           <span style={{ color: 'var(--welcome-btn-border)' }}>✓</span>
           {toastMessage}
         </div>
+      )}
+
+      {showAvatarUploader && (
+        <ImageUploader
+          aspectRatio={1}
+          onClose={() => setShowAvatarUploader(false)}
+          onCrop={handleAvatarCrop}
+          title="Recortar Foto de Perfil"
+        />
+      )}
+
+      {showCoverUploader && (
+        <ImageUploader
+          aspectRatio={3}
+          onClose={() => setShowCoverUploader(false)}
+          onCrop={handleCoverCrop}
+          title="Recortar Capa"
+        />
       )}
 
       <style>{`
