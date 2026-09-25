@@ -22,18 +22,14 @@ export async function updateProfile(data: UpdateProfileRequest): Promise<Support
 export async function uploadAvatar(file: File): Promise<SupporterProfile> {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await httpClient.post<SupporterProfile>('/api/v1/profile/me/avatar', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  const response = await httpClient.post<SupporterProfile>('/api/v1/profile/me/avatar', formData)
   return response.data
 }
 
 export async function uploadCover(file: File): Promise<SupporterProfile> {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await httpClient.post<SupporterProfile>('/api/v1/profile/me/cover', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  const response = await httpClient.post<SupporterProfile>('/api/v1/profile/me/cover', formData)
   return response.data
 }
 
@@ -73,9 +69,7 @@ export async function deletePost(postId: string): Promise<void> {
 export async function uploadPostMedia(postId: string, file: File): Promise<Post> {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await httpClient.post<Post>(`/api/v1/profile/me/posts/${postId}/media`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  const response = await httpClient.post<Post>(`/api/v1/profile/me/posts/${postId}/media`, formData)
   return response.data
 }
 
@@ -146,9 +140,7 @@ export async function updatePublicProfile(
   if (avatarFile) formData.append('avatar', avatarFile)
   if (coverFile) formData.append('cover', coverFile)
 
-  await httpClient.put('/api/v1/pokedex/me', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  await httpClient.put('/api/v1/pokedex/me', formData)
 }
 
 export * from './right-sidebar'

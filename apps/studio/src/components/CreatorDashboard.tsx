@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/dashboard.css'
 import { useQuery } from '@tanstack/react-query'
-import { getFollowers } from '@camplog/api'
+import { getFollowers, getProfile, getPublicProfileByUserId } from '@camplog/api'
 import type { ConnectionProfile } from '@camplog/types'
 import {
   useStudioMetrics,
@@ -174,12 +174,14 @@ function ViewVisaoGeral({
   followers,
   onOpenFollowersModal,
   setActiveTabId,
-  username
+  isProfileConfigured,
+  actualUsername
 }: {
   followers: ConnectionProfile[]
   onOpenFollowersModal: (list: ConnectionProfile[], title: string) => void
   setActiveTabId: (id: string) => void
-  username?: string
+  isProfileConfigured: boolean
+  actualUsername: string
 }) {
   const { data, loading } = useStudioMetrics()
   const [isPostModalOpen, setIsPostModalOpen] = useState(false)
@@ -258,7 +260,14 @@ function ViewVisaoGeral({
       {/* Quick Actions */}
       <section style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
         <button 
-          onClick={() => window.open(`http://localhost:3000/perfil/${username || 'criador'}`, '_blank')} 
+          onClick={() => {
+            if (!isProfileConfigured) {
+              alert('Por favor, configure o nome e o arroba (@) do estúdio primeiro.')
+              setActiveTabId('configuracoes')
+            } else {
+              window.open(`http://localhost:3000/perfil/${actualUsername}`, '_blank')
+            }
+          }} 
           style={{ ...buttonStyle }}
         >Ver Perfil Público</button>
         <button 
@@ -574,6 +583,23 @@ export default function CreatorDashboard() {
 
   const followersList = followersData?.content || []
 
+  // Busca o perfil base do usuário
+  const { data: profileData } = useQuery({
+    queryKey: ['profile', userId],
+    queryFn: () => getProfile(userId!),
+    enabled: !!userId,
+  })
+
+  // Busca o perfil público na pokedex (catch para evitar erros se for 404 - não criado ainda)
+  const { data: publicProfileData } = useQuery({
+    queryKey: ['publicProfile', userId],
+    queryFn: () => getPublicProfileByUserId(userId!).catch(() => null),
+    enabled: !!userId,
+  })
+
+  const isProfileConfigured = Boolean(publicProfileData?.username && profileData?.displayName)
+  const actualUsername = publicProfileData?.username || 'criador'
+
   // Estados do modal de seguidores
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false)
   const [modalFollowersList, setModalFollowersList] = useState<ConnectionProfile[]>([])
@@ -663,7 +689,8 @@ export default function CreatorDashboard() {
             followers={followersList}
             onOpenFollowersModal={handleOpenFollowersModal}
             setActiveTabId={setActiveTabId}
-            username={followersList[0]?.username ?? 'criador'}
+            isProfileConfigured={isProfileConfigured}
+            actualUsername={actualUsername}
           />
         )
       case 'ranking':
@@ -676,7 +703,7 @@ export default function CreatorDashboard() {
       case 'equipe':
         return <ViewTeamManager />
       case 'configuracoes':
-        return <ViewSettings />
+        return <ViewSettings profile={profileData} publicProfile={publicProfileData} />
       case 'wiki_publica':
         return <WikiEditor />
       case 'blog':
@@ -1021,7 +1048,12 @@ export default function CreatorDashboard() {
                         type="button"
                         onClick={() => {
                           if (item.id === 'perfil_publico') {
-                            window.open(`http://localhost:3000/perfil/criador`, '_blank')
+                            if (!isProfileConfigured) {
+                              alert('Por favor, configure o nome e o arroba (@) do estúdio primeiro.')
+                              setActiveTabId('configuracoes')
+                            } else {
+                              window.open(`http://localhost:3000/perfil/${actualUsername}`, '_blank')
+                            }
                           } else {
                             setActiveTabId(item.id)
                           }

@@ -10,6 +10,7 @@ import {
   uploadAvatar,
   uploadCover,
   createPost,
+  uploadPostMedia,
   getPublicProfile,
   updatePublicProfile,
   checkUsernameAvailability
@@ -236,7 +237,13 @@ export default function StudioProfilePage() {
   })
 
   const postMutation = useMutation({
-    mutationFn: (data: CreatePostRequest) => createPost(data),
+    mutationFn: async ({ data, file }: { data: CreatePostRequest, file?: File }) => {
+      const post = await createPost(data)
+      if (file && post.postId) {
+        await uploadPostMedia(post.postId, file)
+      }
+      return post
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts', profile?.userId] })
       showToast('Postagem criada no feed!')
@@ -392,7 +399,7 @@ export default function StudioProfilePage() {
             {activeTab === 'feed' && (
               <>
                 <PostComposer
-                  onSubmit={(data) => postMutation.mutate(data)}
+                  onSubmit={(data, file) => postMutation.mutate({ data, file })}
                   isLoading={postMutation.isPending}
                 />
                 <PostFeed userId={profile.userId} />

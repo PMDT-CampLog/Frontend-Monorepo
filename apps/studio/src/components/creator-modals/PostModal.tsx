@@ -1,11 +1,15 @@
 import React from 'react'
 import { PostComposer } from '@camplog/module-profile'
 
+import type { CreatePostRequest } from '@camplog/types'
+
 interface PostModalProps {
   onClose: () => void
+  onSubmit: (data: CreatePostRequest, file?: File) => void
+  isLoading?: boolean
 }
 
-export function PostModal({ onClose }: PostModalProps) {
+export function PostModal({ onClose, onSubmit, isLoading = false }: PostModalProps) {
   // PostComposer assumes a typical environment, we might just wrap it.
   // It handles its own state and submission, but we might want to close the modal after.
   // For now, we just render it. If we need to listen for success, we might have to pass an onSuccess callback if PostComposer supports it.
@@ -152,7 +156,7 @@ export function PostModal({ onClose }: PostModalProps) {
       </p>
       
       <div style={{ borderRadius: '12px', overflow: 'hidden' }}>
-        <PostComposer onSubmit={() => {}} />
+        <PostComposer onSubmit={onSubmit} isLoading={isLoading} />
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
