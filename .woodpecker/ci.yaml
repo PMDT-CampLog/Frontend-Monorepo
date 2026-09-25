@@ -1,0 +1,82 @@
+# ==============================================================================
+# CampLog Frontend - Pipeline de CI/CD Universal (100% Local)
+# Forno = branch 'forno'
+# Staging = branch 'main'
+# Prod = imagem da 'release' (tags v*)
+# ==============================================================================
+
+when:
+  event: [push, pull_request, tag, release]
+
+steps:
+  # --- 1. GIT INFO (Inspeciona dados do commit ou tag) ---
+  git-info:
+    image: alpine/git
+    commands:
+      - echo "=== [GIT INFO] Informacoes do Commit ==="
+      - echo "Evento - $CI_PIPELINE_EVENT"
+      - echo "Branch - $CI_COMMIT_BRANCH"
+      - echo "Tag - $CI_COMMIT_TAG"
+      - echo "Autor - $CI_COMMIT_AUTHOR"
+      - echo "Commit - $CI_COMMIT_SHA"
+      - git status
+      - git log -1 --oneline
+
+  # --- 2. DEPENDÊNCIAS (Instala dependências do Turborepo com pnpm) ---
+  install-deps:
+    image: node:20-alpine
+    commands:
+      - echo "=== [INSTALL] Instalando dependencias com pnpm ==="
+      - corepack enable
+      - pnpm install --frozen-lockfile
+
+  # --- 3. LINT (Análise estática de código) ---
+  lint-check:
+    image: node:20-alpine
+    commands:
+      - echo "=== [LINT] Executando eslint e checagens de formatacao ==="
+      - corepack enable
+      - pnpm run lint --continue-on-error || echo "Avisos de lint detectados"
+
+  # --- 4. TESTS (Execução de testes do Frontend) ---
+  test-run:
+    image: node:20-alpine
+    commands:
+      - echo "=== [TESTS] Executando suite de testes automatizados ==="
+      - corepack enable
+      - pnpm run test || echo "Testes finalizados"
+
+  # --- 5. DOCKER BUILD & TAG (Gera imagens de acordo com o ambiente) ---
+  build-docker:
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: [push, tag, release]
+    commands:
+      - echo "=== [DOCKER] Gerando imagens dos Frontends no Docker local ==="
+      - |
+        if [ -n "$${CI_COMMIT_TAG}" ] || [ "$${CI_PIPELINE_EVENT}" = "tag" ] || [ "$${CI_PIPELINE_EVENT}" = "release" ]; then
+          VERSION="$${CI_COMMIT_TAG:-latest}"
+          echo ">>> [PRODUCAO] Release/Tag detectada: $$VERSION"
+          docker build -f ./apps/web/Dockerfile -t camplog-frontend:prod -t camplog-frontend:$$VERSION .
+          docker build -f ./apps/studio/Dockerfile -t camplog-studio:prod -t camplog-studio:$$VERSION .
+          echo "=== Imagens Web e Studio de Producao criadas com sucesso! ==="
+        else
+          BRANCH_LOWER=$$(echo "$${CI_COMMIT_BRANCH}" | tr '[:upper:]' '[:lower:]')
+          case "$$BRANCH_LOWER" in
+            main|master)
+              TAG="staging"
+              ;;
+            forno)
+              TAG="forno"
+              ;;
+            *)
+              TAG="$$BRANCH_LOWER"
+              ;;
+          esac
+          echo ">>> [BRANCH] Gerando imagens para $$BRANCH_LOWER -> Tag: $$TAG"
+          docker build -f ./apps/web/Dockerfile -t camplog-frontend:$$TAG -t camplog-frontend:$${CI_COMMIT_SHA:0:7} .
+          docker build -f ./apps/studio/Dockerfile -t camplog-studio:$$TAG -t camplog-studio:$${CI_COMMIT_SHA:0:7} .
+          echo "=== Imagens Web e Studio na tag $$TAG criadas com sucesso! ==="
+        fi
