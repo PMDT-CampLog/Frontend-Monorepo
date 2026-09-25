@@ -3,7 +3,7 @@ import React from 'react'
 import bg1 from '../../assets/bg-1.png'
 import '@/styles/welcome.css'
 import bg2 from '../../assets/bg-2.png'
-import NoScroll from '@/components/NoScroll.tsx'
+import NoScroll from '@/components/NoScroll'
 import ApoiadorCta from './ApoiadorCta'
 
 function LogoIcon() {
