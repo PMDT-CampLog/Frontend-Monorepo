@@ -3,8 +3,8 @@ import { updateProfile, updatePublicProfile } from '@camplog/api'
 import type { SupporterProfile, PublicProfile } from '@camplog/types'
 
 interface ViewSettingsProps {
-  profile?: SupporterProfile | null
-  publicProfile?: PublicProfile | null
+  profile?: SupporterProfile | null | undefined
+  publicProfile?: PublicProfile | null | undefined
 }
 
 export function ViewSettings({ profile, publicProfile }: ViewSettingsProps) {

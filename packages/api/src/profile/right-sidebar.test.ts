@@ -31,13 +31,13 @@ describe('Right Sidebar API Contracts', () => {
     vi.clearAllMocks()
   })
 
-  it('getSpotifyStatus should call GET /api/v1/profile/:userId/spotify', async () => {
+  it('getSpotifyStatus should call GET /api/v1/spotify/status/:userId', async () => {
     const mockData = { connected: true, playlistUrl: 'http://spotify.com' }
     vi.mocked(httpClient.get).mockResolvedValueOnce({ data: mockData } as any)
     
     const result = await getSpotifyStatus('user123')
     
-    expect(httpClient.get).toHaveBeenCalledWith('/api/v1/profile/user123/spotify')
+    expect(httpClient.get).toHaveBeenCalledWith('/api/v1/spotify/status/user123')
     expect(result).toEqual(mockData)
   })
 

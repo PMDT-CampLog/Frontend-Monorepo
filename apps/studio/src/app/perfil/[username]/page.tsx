@@ -237,10 +237,10 @@ export default function StudioProfilePage() {
   })
 
   const postMutation = useMutation({
-    mutationFn: async ({ data, file }: { data: CreatePostRequest, file?: File }) => {
+    mutationFn: async ({ data, file }: { data: CreatePostRequest, file?: File | undefined }) => {
       const post = await createPost(data)
-      if (file && post.postId) {
-        await uploadPostMedia(post.postId, file)
+      if (file && post.id) {
+        await uploadPostMedia(post.id, file)
       }
       return post
     },
