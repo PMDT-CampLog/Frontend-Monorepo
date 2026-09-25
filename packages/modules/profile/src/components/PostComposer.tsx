@@ -22,7 +22,7 @@ export function PostComposer({ onSubmit, isLoading = false }: PostComposerProps)
 
     onSubmit({
       content: content.trim(),
-      type: selectedFile ? 'MEDIA' : 'TEXT',
+      type: selectedFile ? 'IMAGE' : 'TEXT',
       latexEnabled,
     }, selectedFile || undefined)
 
