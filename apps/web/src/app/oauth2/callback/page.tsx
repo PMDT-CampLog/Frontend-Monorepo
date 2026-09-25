@@ -6,7 +6,7 @@ import { processOAuth2Callback } from '@camplog/api'
 import { STUDIO_URL } from '../../../lib/studioUrl'
 import bg1 from '../../../assets/bg-1.png'
 import bg2 from '../../../assets/bg-2.png'
-import NoScroll from '../../bem-vindo/NoScroll'
+import NoScroll from '../../../components/NoScroll'
 
 function OAuthCallbackHandler() {
   const router = useRouter()
