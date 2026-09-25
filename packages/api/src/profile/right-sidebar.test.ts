@@ -1,5 +1,5 @@
 // ==============================================================================
-// Validação da esteira Woodpecker CI - Teste Multi-branch
+// Validacao da esteira Woodpecker CI - Teste Multi-branch (Disparo Automatico)
 // ==============================================================================
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { httpClient } from '../http-client'
