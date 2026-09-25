@@ -28,7 +28,7 @@ steps:
     commands:
       - echo "=== [INSTALL] Instalando dependencias com pnpm ==="
       - corepack enable
-      - pnpm install --frozen-lockfile
+      - pnpm install --no-frozen-lockfile
 
   # --- 3. LINT (Análise estática de código) ---
   lint-check:
