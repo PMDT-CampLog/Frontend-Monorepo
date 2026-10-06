@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getPublicProfileByUserId } from '@camplog/api/bond'
+import { getPublicProfileByUserId } from '@camplog/api/pokedex'
 import '@camplog/module-profile/styles.css'
 
 export default function PerfilRedirectPage() {

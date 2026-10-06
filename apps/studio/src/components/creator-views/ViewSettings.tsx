@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { updateProfile, updatePublicProfile } from '@camplog/api'
+import { updateProfile } from '@camplog/api'
+import { updatePublicProfile } from '@camplog/api/pokedex'
 import type { SupporterProfile, PublicProfile } from '@camplog/types'
 
 interface ViewSettingsProps {

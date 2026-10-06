@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getPublicProfile
-} from '@camplog/api/bond'
+} from '@camplog/api/pokedex'
 import type { PublicProfile } from '@camplog/types'
 import {
   ProfileHeader,

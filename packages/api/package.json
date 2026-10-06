@@ -13,6 +13,8 @@
     "./auth": "./src/auth/index.ts",
     "./bond": "./src/bond/index.ts",
     "./bond/right-sidebar": "./src/bond/right-sidebar.ts",
+    "./pokedex": "./src/pokedex/index.ts",
+    "./correio": "./src/correio/index.ts",
     "./connections": "./src/connections/index.ts"
   },
   "dependencies": {
