@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getPublicProfile
-} from '@camplog/api/profile'
+} from '@camplog/api/bond'
 import type { PublicProfile } from '@camplog/types'
 import {
   ProfileHeader,
@@ -17,7 +17,7 @@ import {
   RightSidebar,
   ImageUploader,
 } from '@camplog/module-profile'
-import { uploadAvatar, uploadCover } from '@camplog/api/profile'
+import { uploadAvatar, uploadCover } from '@camplog/api/bond'
 import type { TabId } from '@camplog/module-profile'
 
 /* ──────────────────────── MAIN COMPONENT ──────────────────────── */

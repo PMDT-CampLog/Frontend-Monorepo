@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { connectSpotifyCallback, getPublicProfileByUserId } from '@camplog/api/profile'
+import { connectSpotifyCallback, getPublicProfileByUserId } from '@camplog/api/bond'
 import bg1 from '../../../../assets/bg-1.png'
 import bg2 from '../../../../assets/bg-2.png'
 

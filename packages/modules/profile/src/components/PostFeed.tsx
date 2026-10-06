@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getUserPosts, toggleLike } from '@camplog/api/profile'
+import { getUserPosts, toggleLike } from '@camplog/api/bond'
 import type { PostPageResponse } from '@camplog/types'
 import { PostCard } from './PostCard'
 

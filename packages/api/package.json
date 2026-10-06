@@ -11,8 +11,8 @@
     "./bug-tracker": "./src/bug-tracker/index.ts",
     "./projects": "./src/projects/index.ts",
     "./auth": "./src/auth/index.ts",
-    "./profile": "./src/profile/index.ts",
-    "./profile/right-sidebar": "./src/profile/right-sidebar.ts",
+    "./bond": "./src/bond/index.ts",
+    "./bond/right-sidebar": "./src/bond/right-sidebar.ts",
     "./connections": "./src/connections/index.ts"
   },
   "dependencies": {

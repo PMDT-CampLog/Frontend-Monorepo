@@ -7,7 +7,7 @@ import {
   CreatePostRequest,
 } from '@camplog/types'
 
-// --- Profile ---
+// --- Bond ---
 
 export async function getProfile(userId: string): Promise<SupporterProfile> {
   const response = await httpClient.get<SupporterProfile>(`/api/v1/profile/${userId}`)

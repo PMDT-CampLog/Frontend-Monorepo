@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getLikedPosts, toggleLike } from '@camplog/api/profile'
+import { getLikedPosts, toggleLike } from '@camplog/api/bond'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PostCard } from './PostCard'
 

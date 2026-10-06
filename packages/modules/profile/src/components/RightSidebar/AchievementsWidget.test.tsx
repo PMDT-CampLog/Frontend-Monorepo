@@ -2,9 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AchievementsWidget } from './AchievementsWidget'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import * as api from '@camplog/api/profile'
+import * as api from '@camplog/api/bond'
 
-vi.mock('@camplog/api/profile', () => ({
+vi.mock('@camplog/api/bond', () => ({
   getAchievements: vi.fn(),
 }))
 

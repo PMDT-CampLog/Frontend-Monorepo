@@ -14,7 +14,7 @@ import {
   getPublicProfile,
   updatePublicProfile,
   checkUsernameAvailability
-} from '@camplog/api/profile'
+} from '@camplog/api/bond'
 import type { SupporterProfile, UpdateProfileRequest, CreatePostRequest, PublicProfile, UpdatePublicProfileRequest } from '@camplog/types'
 import {
   ProfileHeader,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getDiscordStatus } from '@camplog/api/profile'
+import { getDiscordStatus } from '@camplog/api/bond'
 import { WidgetCard } from './WidgetCard'
 
 interface DiscordWidgetProps {

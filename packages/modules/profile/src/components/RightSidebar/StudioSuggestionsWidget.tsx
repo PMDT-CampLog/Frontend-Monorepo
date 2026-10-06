@@ -1,6 +1,6 @@
 import React from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getStudioSuggestions, followStudio } from '@camplog/api/profile'
+import { getStudioSuggestions, followStudio } from '@camplog/api/bond'
 import { WidgetCard } from './WidgetCard'
 
 interface StudioSuggestionsWidgetProps {
