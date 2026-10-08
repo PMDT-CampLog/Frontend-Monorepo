@@ -9,12 +9,16 @@ import {
   updateProfile,
   uploadAvatar,
   uploadCover,
+} from '@camplog/api/bond'
+import {
   createPost,
   uploadPostMedia,
+} from '@camplog/api/correio'
+import {
   getPublicProfile,
   updatePublicProfile,
   checkUsernameAvailability
-} from '@camplog/api/profile'
+} from '@camplog/api/pokedex'
 import type { SupporterProfile, UpdateProfileRequest, CreatePostRequest, PublicProfile, UpdatePublicProfileRequest } from '@camplog/types'
 import {
   ProfileHeader,

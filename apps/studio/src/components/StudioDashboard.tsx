@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import '../styles/dashboard.css'
-import { searchProfiles } from '@camplog/api/profile'
+import { searchProfiles } from '@camplog/api/pokedex'
 import { LogoIcon, IconHome, IconSearch, IconChat, IconPlus, IconDots, IconHeart, IconComment, IconShare, IconPlay, IconDoc, IconRss, IconCalendar, IconFlag, IconCompass, UsersIcon, GearIcon, BookIcon, BugIcon, BellIcon, BookmarkIcon } from '@camplog/ui'
 
 /* ──────────────────────── SVG Icons ──────────────────────── */

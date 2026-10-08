@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/dashboard.css'
 import { useQuery } from '@tanstack/react-query'
-import { getFollowers, getProfile, getPublicProfileByUserId } from '@camplog/api'
+import { getFollowers, getProfile } from '@camplog/api'
+import {getPublicProfileByUserId} from '@camplog/api/pokedex'
 import type { ConnectionProfile } from '@camplog/types'
 import {
   useStudioMetrics,
